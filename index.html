@@ -1,167 +1,111 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mahjong Ways Simulasi</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mahjong Slot Simulasi</title>
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: sans-serif;
-      background: #6b3f1d;
-      color: #fff;
-      overflow: hidden;
-    }
-
-    /* landscape paksa */
-    @media screen and (orientation:portrait) {
-      body::before {
-        content: "Silakan putar perangkat Anda ke mode landscape";
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 22px;
-        z-index: 9999;
-      }
-    }
-
-    .header {
-      background: #8b4c27;
-      padding: 5px;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .slot-container {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      grid-template-rows: repeat(3, 100px);
-      gap: 5px;
-      justify-items: center;
-      align-items: center;
-      background: #2f8d3a;
-      padding: 10px;
-      border: 5px solid #c89b3c;
-    }
-
-    .symbol img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    .controls {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      background: #8b4c27;
-      padding: 10px;
-    }
-
-    .btn {
-      background: #3fa74f;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 18px;
-      color: white;
-      box-shadow: 0 4px #276c35;
-    }
-
-    .status {
-      text-align: center;
-      background: #5a331a;
-      padding: 10px;
-    }
+    body{margin:0;background:#6b2d0c;font-family:sans-serif;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;overflow:hidden}
+    .game{background:#b87333;width:100%;max-width:420px;border-radius:12px;box-shadow:0 0 20px rgba(0,0,0,0.6);padding:6px}
+    .header{display:flex;justify-content:center;color:#fff;font-weight:700;margin-bottom:4px}
+    .multiplier{background:#8b3a0f;color:#ff0;padding:4px;border-radius:4px;margin:2px;font-weight:bold}
+    .reels{background:#3c9121;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(3,80px);gap:6px;padding:10px;border-radius:10px;box-shadow:inset 0 0 20px rgba(0,0,0,.6);height:280px;overflow:hidden;position:relative}
+    .symbol{width:100%;height:80px;background:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:40px}
+    .result{background:#5e0d0d;color:#ffde8c;text-align:center;font-size:20px;padding:6px;margin-top:6px;border-radius:8px;font-weight:bold}
+    .footer{display:flex;justify-content:space-around;margin-top:4px;font-size:14px}
+    .spin-btn{background:radial-gradient(circle,#3da43d,#006400);border:4px solid #c2f0c2;width:80px;height:80px;border-radius:50%;font-size:28px;color:white;cursor:pointer;margin:10px auto;display:flex;align-items:center;justify-content:center;box-shadow:0 0 15px rgba(0,0,0,.6)}
   </style>
 </head>
 <body>
+  <div class="game">
+    <div class="header">
+      <div class="multiplier">x1</div>
+      <div class="multiplier">x2</div>
+      <div class="multiplier">x3</div>
+      <div class="multiplier">x5</div>
+    </div>
 
-  <div class="header">Mahjong Ways - Simulasi Belajar</div>
+    <div class="reels" id="reels"></div>
 
-  <div class="status">
-    Saldo: <span id="saldo">100.00</span> | Taruhan: <span id="bet">0.80</span> | Menang: <span id="win">0.00</span>
+    <div class="result" id="result">MENANG 0.00</div>
+
+    <div class="footer">
+      <div>Rp<span id="saldo">111.26</span></div>
+      <div>Rp<span id="bet">0.80</span></div>
+      <div>Rp<span id="win">0.00</span></div>
+    </div>
+
+    <button class="spin-btn" id="spinBtn">⟳</button>
   </div>
 
-  <div class="slot-container" id="slot">
-    <!-- simbol akan diisi dengan JS -->
-  </div>
+  <script>
+    const symbols=["🀄","🀅","🀆","🀇","🀈","🀉","🀊","🀋","🀌","🀍"];
+    const reels=document.getElementById("reels");
+    const spinBtn=document.getElementById("spinBtn");
+    const saldoEl=document.getElementById("saldo");
+    const winEl=document.getElementById("win");
+    const resultEl=document.getElementById("result");
 
-  <div class="controls">
-    <button class="btn" onclick="spin()">🔄</button>
-  </div>
+    let saldo=111.26;
+    let bet=0.80;
 
-<script>
-  const slot = document.getElementById("slot");
-  const saldoEl = document.getElementById("saldo");
-  const winEl = document.getElementById("win");
-
-  let saldo = 100.00;
-  const bet = 0.80;
-
-  const symbols = [
-    "images/simbol1.png", // merah 中
-    "images/simbol2.png", // biru 八萬
-    "images/simbol3.png", // lingkaran
-    "images/simbol4.png", // bambu
-    "images/simbol5.png", // wild emas
-    "images/simbol6.png"  // batangan emas
-  ];
-
-  // isi awal
-  for (let i=0; i<15; i++) {
-    const div = document.createElement("div");
-    div.className = "symbol";
-    div.innerHTML = `<img src="${symbols[Math.floor(Math.random()*symbols.length)]}">`;
-    slot.appendChild(div);
-  }
-
-  function spin() {
-    if (saldo < bet) {
-      alert("Saldo tidak cukup!");
-      return;
-    }
-    saldo -= bet;
-    saldoEl.innerText = saldo.toFixed(2);
-
-    const reels = slot.querySelectorAll(".symbol");
-
-    // animasi spin
-    reels.forEach((div, i) => {
-      setTimeout(() => {
-        div.innerHTML = `<img src="${symbols[Math.floor(Math.random()*symbols.length)]}">`;
-      }, i*100);
-    });
-
-    // cek menang sederhana (kalau ada 3 simbol sama berturut-turut di array)
-    setTimeout(() => {
-      let hasil = [];
-      reels.forEach(r => {
-        hasil.push(r.querySelector("img").src);
-      });
-
-      let menang = 0;
-      symbols.forEach(sym => {
-        let count = hasil.filter(h => h.includes(sym)).length;
-        if (count >= 3) {
-          menang += 0.32; // kemenangan dummy
-        }
-      });
-
-      if (menang > 0) {
-        saldo += menang;
+    function initGrid(){
+      reels.innerHTML="";
+      for(let i=0;i<15;i++){
+        const div=document.createElement("div");
+        div.className="symbol";
+        div.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+        reels.appendChild(div);
       }
-      winEl.innerText = menang.toFixed(2);
-      saldoEl.innerText = saldo.toFixed(2);
-    }, 2000);
-  }
-</script>
+    }
 
+    function spin(){
+      if(saldo<bet){resultEl.textContent="Saldo tidak cukup";return;}
+      saldo-=bet;
+      saldoEl.textContent=saldo.toFixed(2);
+
+      let spins=20; // jumlah update animasi
+      let interval=setInterval(()=>{
+        for(let i=0;i<15;i++){
+          reels.children[i].textContent=symbols[Math.floor(Math.random()*symbols.length)];
+        }
+        spins--;
+        if(spins<=0){
+          clearInterval(interval);
+          stopAndCheck();
+        }
+      },100);
+    }
+
+    function stopAndCheck(){
+      // final isi grid
+      for(let i=0;i<15;i++){
+        reels.children[i].textContent=symbols[Math.floor(Math.random()*symbols.length)];
+      }
+      // hitung jumlah simbol
+      let counts={};
+      for(let i=0;i<15;i++){
+        let s=reels.children[i].textContent;
+        counts[s]=(counts[s]||0)+1;
+      }
+      let max=0;let sym="";
+      for(let s in counts){
+        if(counts[s]>max){max=counts[s];sym=s;}
+      }
+      if(max>=3){
+        let menang=(bet*max).toFixed(2);
+        saldo+=parseFloat(menang);
+        saldoEl.textContent=saldo.toFixed(2);
+        winEl.textContent=menang;
+        resultEl.textContent="MENANG "+menang;
+      }else{
+        winEl.textContent="0.00";
+        resultEl.textContent="Tidak Menang";
+      }
+    }
+
+    spinBtn.addEventListener("click",spin);
+    initGrid();
+  </script>
 </body>
 </html>
