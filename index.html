@@ -2,164 +2,166 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Mahjong Slot Simulasi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mahjong Ways Simulasi</title>
   <style>
     body {
       margin: 0;
-      background: #7b3f00;
+      padding: 0;
+      font-family: sans-serif;
+      background: #6b3f1d;
       color: #fff;
-      font-family: Arial, sans-serif;
       overflow: hidden;
     }
-    .game {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+
+    /* landscape paksa */
+    @media screen and (orientation:portrait) {
+      body::before {
+        content: "Silakan putar perangkat Anda ke mode landscape";
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        z-index: 9999;
+      }
     }
+
     .header {
-      display: flex;
-      justify-content: space-between;
-      width: 90%;
-      font-size: 14px;
-      margin-bottom: 8px;
+      background: #8b4c27;
+      padding: 5px;
+      text-align: center;
+      font-weight: bold;
     }
-    .reels {
+
+    .slot-container {
       display: grid;
-      grid-template-columns: repeat(5, 80px);
-      grid-template-rows: repeat(3, 80px);
-      gap: 6px;
-      background: #2a8a1f;
-      padding: 12px;
-      border-radius: 10px;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-    }
-    .symbol {
-      width: 80px;
-      height: 80px;
-      background-size: cover;
-      background-position: center;
-      border-radius: 6px;
-      background-color: #fff;
-    }
-    .controls {
-      margin-top: 12px;
-      display: flex;
-      flex-direction: column;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      justify-items: center;
       align-items: center;
+      background: #2f8d3a;
+      padding: 10px;
+      border: 5px solid #c89b3c;
     }
+
+    .symbol img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: #8b4c27;
+      padding: 10px;
+    }
+
     .btn {
-      background: #28a745;
+      background: #3fa74f;
       border: none;
-      padding: 12px 30px;
-      font-size: 18px;
+      padding: 10px 20px;
       border-radius: 50%;
-      color: white;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      font-size: 18px;
+      color: white;
+      box-shadow: 0 4px #276c35;
     }
+
     .status {
-      margin-top: 8px;
-      font-size: 16px;
+      text-align: center;
+      background: #5a331a;
+      padding: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="game">
-    <div class="header">
-      <div>Saldo: <span id="saldo">Rp 100.00</span></div>
-      <div>Taruhan: Rp <span id="taruhan">0.80</span></div>
-    </div>
 
-    <div class="reels" id="reels"></div>
+  <div class="header">Mahjong Ways - Simulasi Belajar</div>
 
-    <div class="controls">
-      <button class="btn" id="spinBtn">⟳</button>
-      <div class="status" id="status">Tekan tombol untuk Spin</div>
-    </div>
+  <div class="status">
+    Saldo: <span id="saldo">100.00</span> | Taruhan: <span id="bet">0.80</span> | Menang: <span id="win">0.00</span>
   </div>
 
-  <script>
-    const symbols = [
-      "🀄","🀅","🀆","🀇","🀈","🀉","🀊","🀋","🀌","🀍"
-    ];
-    const reels = document.getElementById("reels");
-    const saldoEl = document.getElementById("saldo");
-    const statusEl = document.getElementById("status");
-    const spinBtn = document.getElementById("spinBtn");
+  <div class="slot-container" id="slot">
+    <!-- simbol akan diisi dengan JS -->
+  </div>
 
-    let saldo = 100.00;
-    let taruhan = 0.80;
+  <div class="controls">
+    <button class="btn" onclick="spin()">🔄</button>
+  </div>
 
-    // isi awal
-    function initGrid() {
-      reels.innerHTML = "";
-      for (let i=0; i<15; i++) {
-        const div = document.createElement("div");
-        div.className = "symbol";
-        div.textContent = symbols[Math.floor(Math.random()*symbols.length)];
-        div.style.display="flex";
-        div.style.alignItems="center";
-        div.style.justifyContent="center";
-        div.style.fontSize="40px";
-        reels.appendChild(div);
-      }
+<script>
+  const slot = document.getElementById("slot");
+  const saldoEl = document.getElementById("saldo");
+  const winEl = document.getElementById("win");
+
+  let saldo = 100.00;
+  const bet = 0.80;
+
+  const symbols = [
+    "images/simbol1.png", // merah 中
+    "images/simbol2.png", // biru 八萬
+    "images/simbol3.png", // lingkaran
+    "images/simbol4.png", // bambu
+    "images/simbol5.png", // wild emas
+    "images/simbol6.png"  // batangan emas
+  ];
+
+  // isi awal
+  for (let i=0; i<15; i++) {
+    const div = document.createElement("div");
+    div.className = "symbol";
+    div.innerHTML = `<img src="${symbols[Math.floor(Math.random()*symbols.length)]}">`;
+    slot.appendChild(div);
+  }
+
+  function spin() {
+    if (saldo < bet) {
+      alert("Saldo tidak cukup!");
+      return;
     }
+    saldo -= bet;
+    saldoEl.innerText = saldo.toFixed(2);
 
-    function spin() {
-      if (saldo < taruhan) {
-        statusEl.textContent = "Saldo tidak cukup!";
-        return;
-      }
-      saldo -= taruhan;
-      saldoEl.textContent = "Rp " + saldo.toFixed(2);
-      statusEl.textContent = "Memutar...";
+    const reels = slot.querySelectorAll(".symbol");
 
-      let interval = setInterval(()=>{
-        for (let i=0; i<15; i++) {
-          reels.children[i].textContent = symbols[Math.floor(Math.random()*symbols.length)];
+    // animasi spin
+    reels.forEach((div, i) => {
+      setTimeout(() => {
+        div.innerHTML = `<img src="${symbols[Math.floor(Math.random()*symbols.length)]}">`;
+      }, i*100);
+    });
+
+    // cek menang sederhana (kalau ada 3 simbol sama berturut-turut di array)
+    setTimeout(() => {
+      let hasil = [];
+      reels.forEach(r => {
+        hasil.push(r.querySelector("img").src);
+      });
+
+      let menang = 0;
+      symbols.forEach(sym => {
+        let count = hasil.filter(h => h.includes(sym)).length;
+        if (count >= 3) {
+          menang += 0.32; // kemenangan dummy
         }
-      },100);
+      });
 
-      setTimeout(()=>{
-        clearInterval(interval);
-        // hasil final
-        for (let i=0; i<15; i++) {
-          reels.children[i].textContent = symbols[Math.floor(Math.random()*symbols.length)];
-        }
-        cekMenang();
-      }, 1500);
-    }
-
-    function cekMenang(){
-      // hitung simbol paling sering muncul
-      let counts = {};
-      for (let i=0; i<15; i++) {
-        let sym = reels.children[i].textContent;
-        counts[sym] = (counts[sym]||0)+1;
-      }
-      let maxSym = null;
-      let maxCount = 0;
-      for (let s in counts){
-        if(counts[s]>maxCount){
-          maxCount=counts[s];
-          maxSym=s;
-        }
-      }
-      if(maxCount>=3){
-        let menang = taruhan * maxCount;
+      if (menang > 0) {
         saldo += menang;
-        saldoEl.textContent = "Rp " + saldo.toFixed(2);
-        statusEl.textContent = "Menang " + menang.toFixed(2) + " dengan simbol " + maxSym;
-      } else {
-        statusEl.textContent = "Tidak menang, coba lagi!";
       }
-    }
+      winEl.innerText = menang.toFixed(2);
+      saldoEl.innerText = saldo.toFixed(2);
+    }, 2000);
+  }
+</script>
 
-    spinBtn.addEventListener("click", spin);
-    initGrid();
-  </script>
 </body>
 </html>
