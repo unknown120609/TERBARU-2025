@@ -1,71 +1,165 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Casino Style Landing</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Mahjong Slot Simulasi</title>
   <style>
-    body,html{margin:0;padding:0;width:100%;height:100%;overflow:hidden;
-      font-family:sans-serif;background:#1b1340;color:#fff}
-    .landscape-warning{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:#fff;align-items:center;justify-content:center;z-index:999}
-    .wrapper{display:flex;flex-direction:row;width:100%;height:100%}
-    .sidebar{width:150px;background:rgba(255,255,255,0.05);padding:10px;display:flex;flex-direction:column}
-    .sidebar li{list-style:none;padding:10px;margin:4px 0;cursor:pointer;border-radius:6px}
-    .sidebar li.active{background:#583ea8}
-    .stage{flex:1;display:flex;flex-direction:column;padding:10px}
-    .carousel{display:flex;gap:14px;overflow-x:auto}
-    .card{flex:0 0 180px;background:#2e1a55;border-radius:12px;overflow:hidden;cursor:pointer}
-    .card img{width:100%;height:120px;object-fit:cover}
-    .card .title{text-align:center;padding:6px;font-weight:bold}
-    .bottom{margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding:8px;background:rgba(255,255,255,0.05);border-radius:10px}
-    .btn{background:linear-gradient(90deg,#ffb400,#ff7b7b);border:none;padding:8px 16px;border-radius:10px;font-weight:bold;cursor:pointer}
-    @media screen and (orientation:portrait){
-      .wrapper{display:none}
-      .landscape-warning{display:flex}
+    body {
+      margin: 0;
+      background: #7b3f00;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+    .game {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      width: 90%;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .reels {
+      display: grid;
+      grid-template-columns: repeat(5, 80px);
+      grid-template-rows: repeat(3, 80px);
+      gap: 6px;
+      background: #2a8a1f;
+      padding: 12px;
+      border-radius: 10px;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+    }
+    .symbol {
+      width: 80px;
+      height: 80px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 6px;
+      background-color: #fff;
+    }
+    .controls {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .btn {
+      background: #28a745;
+      border: none;
+      padding: 12px 30px;
+      font-size: 18px;
+      border-radius: 50%;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .status {
+      margin-top: 8px;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
-  <div class="landscape-warning">
-    <h2>Putar perangkat ke mode Landscape</h2>
+  <div class="game">
+    <div class="header">
+      <div>Saldo: <span id="saldo">Rp 100.00</span></div>
+      <div>Taruhan: Rp <span id="taruhan">0.80</span></div>
+    </div>
+
+    <div class="reels" id="reels"></div>
+
+    <div class="controls">
+      <button class="btn" id="spinBtn">⟳</button>
+      <div class="status" id="status">Tekan tombol untuk Spin</div>
+    </div>
   </div>
 
-  <div class="wrapper">
-    <aside class="sidebar">
-      <ul>
-        <li class="active">Populer</li>
-        <li>New</li>
-        <li>Favorit</li>
-        <li>Video</li>
-        <li>Kasino</li>
-        <li>Slots</li>
-      </ul>
-    </aside>
-    <main class="stage">
-      <div style="margin-bottom:10px;font-size:14px">ph****26 menarik Rp 125,000 • 5 detik lalu</div>
-      <div class="carousel">
-        <div class="card">
-          <img src="https://picsum.photos/300/200?random=1">
-          <div class="title">Gates Of Olympus</div>
-        </div>
-        <div class="card" onclick="location.href='mahjong.html'">
-          <img src="https://picsum.photos/300/200?random=2">
-          <div class="title">Mahjong Ways</div>
-        </div>
-        <div class="card">
-          <img src="https://picsum.photos/300/200?random=3">
-          <div class="title">Baccarat</div>
-        </div>
-        <div class="card">
-          <img src="https://picsum.photos/300/200?random=4">
-          <div class="title">Sic Bo Thailand</div>
-        </div>
-      </div>
-      <div class="bottom">
-        <div style="font-weight:bold">Top up | Penarikan | Service</div>
-        <button class="btn">Mulai</button>
-      </div>
-    </main>
-  </div>
+  <script>
+    const symbols = [
+      "🀄","🀅","🀆","🀇","🀈","🀉","🀊","🀋","🀌","🀍"
+    ];
+    const reels = document.getElementById("reels");
+    const saldoEl = document.getElementById("saldo");
+    const statusEl = document.getElementById("status");
+    const spinBtn = document.getElementById("spinBtn");
+
+    let saldo = 100.00;
+    let taruhan = 0.80;
+
+    // isi awal
+    function initGrid() {
+      reels.innerHTML = "";
+      for (let i=0; i<15; i++) {
+        const div = document.createElement("div");
+        div.className = "symbol";
+        div.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+        div.style.display="flex";
+        div.style.alignItems="center";
+        div.style.justifyContent="center";
+        div.style.fontSize="40px";
+        reels.appendChild(div);
+      }
+    }
+
+    function spin() {
+      if (saldo < taruhan) {
+        statusEl.textContent = "Saldo tidak cukup!";
+        return;
+      }
+      saldo -= taruhan;
+      saldoEl.textContent = "Rp " + saldo.toFixed(2);
+      statusEl.textContent = "Memutar...";
+
+      let interval = setInterval(()=>{
+        for (let i=0; i<15; i++) {
+          reels.children[i].textContent = symbols[Math.floor(Math.random()*symbols.length)];
+        }
+      },100);
+
+      setTimeout(()=>{
+        clearInterval(interval);
+        // hasil final
+        for (let i=0; i<15; i++) {
+          reels.children[i].textContent = symbols[Math.floor(Math.random()*symbols.length)];
+        }
+        cekMenang();
+      }, 1500);
+    }
+
+    function cekMenang(){
+      // hitung simbol paling sering muncul
+      let counts = {};
+      for (let i=0; i<15; i++) {
+        let sym = reels.children[i].textContent;
+        counts[sym] = (counts[sym]||0)+1;
+      }
+      let maxSym = null;
+      let maxCount = 0;
+      for (let s in counts){
+        if(counts[s]>maxCount){
+          maxCount=counts[s];
+          maxSym=s;
+        }
+      }
+      if(maxCount>=3){
+        let menang = taruhan * maxCount;
+        saldo += menang;
+        saldoEl.textContent = "Rp " + saldo.toFixed(2);
+        statusEl.textContent = "Menang " + menang.toFixed(2) + " dengan simbol " + maxSym;
+      } else {
+        statusEl.textContent = "Tidak menang, coba lagi!";
+      }
+    }
+
+    spinBtn.addEventListener("click", spin);
+    initGrid();
+  </script>
 </body>
-  </html>
+</html>
