@@ -2,150 +2,122 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Mahjong Slot - Simulasi</title>
+  <title>Slot Mahjong — Simulasi</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #0b0b2b;
-      color: white;
+      background: #3a2418;
+      color: #fff;
       text-align: center;
     }
-    .container { padding: 20px; }
-    .card {
-      background: #1b1b3a;
-      padding: 15px;
-      border-radius: 10px;
-      margin: 10px auto;
-      max-width: 350px;
-    }
-    input {
-      width: 90%;
-      padding: 8px;
-      margin: 6px 0;
-      border-radius: 6px;
-      border: none;
-    }
-    button {
-      padding: 10px 20px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 8px;
-      background: orange;
-      color: black;
+    header {
+      padding: 10px;
+      background: #5a3523;
       font-weight: bold;
-      cursor: pointer;
     }
     #slot {
-      display: none;
-      padding: 20px;
-    }
-    .reels {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(5, 70px);
+      grid-template-rows: repeat(3, 70px);
+      gap: 5px;
       justify-content: center;
-      margin: 20px 0;
+      margin: 20px auto;
     }
-    .reel {
-      width: 60px;
-      height: 60px;
-      margin: 0 5px;
+    .tile {
       background: #fff;
-      color: black;
+      color: #000;
+      font-size: 22px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 24px;
       border-radius: 8px;
+      font-weight: bold;
+    }
+    #controls {
+      margin: 20px;
+    }
+    #spinBtn {
+      padding: 15px 40px;
+      font-size: 18px;
+      border-radius: 50px;
+      border: none;
+      background: linear-gradient(180deg, #3cb371, #228b22);
+      color: #fff;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #spinBtn:active {
+      transform: scale(0.95);
+    }
+    #info {
+      margin-top: 10px;
+      font-size: 18px;
     }
   </style>
 </head>
 <body>
+  <header>💰 Saldo: Rp <span id="saldo">1000</span></header>
 
-  <div id="auth" class="container">
-    <h2>Mahjong Slot — Simulasi (Belajar)</h2>
-    <p><b>Penting:</b> Ini hanya simulasi. Tidak ada uang asli.</p>
-    <div class="card">
-      <h3>Daftar (Register)</h3>
-      <input id="regUser" placeholder="Username">
-      <input id="regPass" type="password" placeholder="Password">
-      <button onclick="register()">Daftar</button>
-    </div>
-    <div class="card">
-      <h3>Masuk (Login)</h3>
-      <input id="logUser" placeholder="Username">
-      <input id="logPass" type="password" placeholder="Password">
-      <button onclick="login()">Masuk</button>
-    </div>
+  <div id="slot"></div>
+
+  <div id="controls">
+    <button id="spinBtn">SPIN</button>
+    <div id="info">Menang: Rp 0</div>
   </div>
 
-  <div id="slot">
-    <h2>🎰 Mahjong Slot</h2>
-    <p>Saldo: Rp <span id="saldo">100</span></p>
-    <div class="reels">
-      <div class="reel" id="r1">?</div>
-      <div class="reel" id="r2">?</div>
-      <div class="reel" id="r3">?</div>
-    </div>
-    <button onclick="spin()">SPIN</button>
-    <p id="result"></p>
-  </div>
+  <script>
+    const simbols = ["中","八","萬","WILD","金"];
+    const saldoEl = document.getElementById("saldo");
+    const infoEl = document.getElementById("info");
+    const slotEl = document.getElementById("slot");
+    let saldo = 1000;
 
-<script>
-  let saldo = 100;
-  const symbols = ["中", "萬", "八", "WILD", "◎", "口"];
-
-  // Register
-  function register() {
-    let u = document.getElementById("regUser").value;
-    let p = document.getElementById("regPass").value;
-    if(u && p){
-      localStorage.setItem("user", u);
-      localStorage.setItem("pass", p);
-      alert("Berhasil daftar! Silakan login.");
-    } else {
-      alert("Isi username & password!");
-    }
-  }
-
-  // Login
-  function login() {
-    let u = document.getElementById("logUser").value;
-    let p = document.getElementById("logPass").value;
-    if(u === localStorage.getItem("user") && p === localStorage.getItem("pass")){
-      document.getElementById("auth").style.display = "none";
-      document.getElementById("slot").style.display = "block";
-    } else {
-      alert("Login gagal!");
-    }
-  }
-
-  // Spin function
-  function spin() {
-    if (saldo <= 0) {
-      alert("Saldo habis!");
-      return;
+    // buat grid awal
+    function buatGrid() {
+      slotEl.innerHTML = "";
+      for (let i = 0; i < 15; i++) {
+        let div = document.createElement("div");
+        div.className = "tile";
+        div.textContent = simbols[Math.floor(Math.random() * simbols.length)];
+        slotEl.appendChild(div);
+      }
     }
 
-    saldo -= 1; // biaya spin
-    let r1 = symbols[Math.floor(Math.random()*symbols.length)];
-    let r2 = symbols[Math.floor(Math.random()*symbols.length)];
-    let r3 = symbols[Math.floor(Math.random()*symbols.length)];
+    // spin
+    function spin() {
+      if (saldo < 10) {
+        alert("Saldo habis! (simulasi)");
+        return;
+      }
+      saldo -= 10;
+      saldoEl.textContent = saldo;
+      slotEl.innerHTML = "";
+      let hasil = [];
+      for (let i = 0; i < 15; i++) {
+        let simbol = simbols[Math.floor(Math.random() * simbols.length)];
+        hasil.push(simbol);
+        let div = document.createElement("div");
+        div.className = "tile";
+        div.textContent = simbol;
+        slotEl.appendChild(div);
+      }
 
-    document.getElementById("r1").innerText = r1;
-    document.getElementById("r2").innerText = r2;
-    document.getElementById("r3").innerText = r3;
-
-    // Cek menang
-    if(r1 === r2 && r2 === r3){
-      saldo += 10;
-      document.getElementById("result").innerText = "Menang! +Rp10";
-    } else {
-      document.getElementById("result").innerText = "Coba lagi!";
+      // cek kemenangan sederhana (contoh: 3 simbol sama berturut-turut)
+      let menang = 0;
+      for (let i = 0; i < hasil.length - 2; i++) {
+        if (hasil[i] === hasil[i+1] && hasil[i] === hasil[i+2]) {
+          menang += 50;
+        }
+      }
+      saldo += menang;
+      saldoEl.textContent = saldo;
+      infoEl.textContent = "Menang: Rp " + menang;
     }
 
-    document.getElementById("saldo").innerText = saldo;
-  }
-</script>
+    document.getElementById("spinBtn").addEventListener("click", spin);
 
+    buatGrid();
+  </script>
 </body>
 </html>
