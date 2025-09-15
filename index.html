@@ -1,484 +1,151 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Mahjong Slot — Simulasi Belajar</title>
-<style>
-  :root{
-    --bg:#0f0820; --panel:#1b1340; --accent:#ffb400; --muted:#b8a6e6;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Inter, system-ui, Arial; background:linear-gradient(180deg,#0f0820,#140f3a);color:#fff;min-height:100vh}
-  header{padding:10px 16px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-bottom:1px solid rgba(255,255,255,0.03)}
-  header h1{font-size:16px;margin:0}
-  .container{padding:16px;max-width:1100px;margin:0 auto}
-  .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));padding:14px;border-radius:12px;margin-bottom:14px}
-
-  /* layout */
-  .cols{display:flex;gap:14px;flex-wrap:wrap}
-  .col{flex:1;min-width:280px}
-
-  /* forms */
-  label{display:block;margin:8px 0 4px;font-size:13px;color:var(--muted)}
-  input[type="text"], input[type="password"], input[type="number"], select, textarea{
-    width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);color:#fff
-  }
-  button{background:linear-gradient(90deg,var(--accent),#ff7b7b);border:none;padding:10px 14px;border-radius:10px;color:#1b0b00;font-weight:700;cursor:pointer}
-  small.note{color:#bdb6e9;display:block;margin-top:6px}
-
-  /* slot area */
-  .slot-area{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}
-  .board{background:#2f8d3a;padding:12px;border-radius:12px;border:6px solid #c89b3c;display:grid;grid-template-columns:repeat(5,1fr);grid-auto-rows:80px;gap:6px;width:100%;max-width:720px}
-  .cell{background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:36px;overflow:hidden}
-  .cell img{width:100%;height:100%;object-fit:contain}
-  .controls{min-width:220px;background:linear-gradient(180deg,#21113b,#2f1b5b);padding:12px;border-radius:12px}
-  .controls .big{font-size:18px;font-weight:800;margin-bottom:8px}
-  .spin-button{width:80px;height:80px;border-radius:50%;border:6px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(90deg,#2ec06e,#1c7b3d);cursor:pointer}
-  .small-btn{padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.03);color:#fff;margin-right:8px;cursor:pointer}
-  .status{background:linear-gradient(90deg,#5e0d0d,#7a1b1b);padding:8px;border-radius:8px;text-align:center;font-weight:700;margin-top:8px}
-
-  /* history table */
-  table{width:100%;border-collapse:collapse}
-  th,td{padding:8px;text-align:left;border-bottom:1px dashed rgba(255,255,255,0.03);font-size:13px;color:#ddd}
-
-  /* responsive */
-  @media (max-width:900px){
-    .slot-area{flex-direction:column}
-    .board{max-width:100%}
-    .controls{width:100%}
-  }
-
-  /* small helper */
-  .muted{color:var(--muted);font-size:13px}
-  .danger{color:#ff9b9b}
-  .success{color:#b9ffa6}
-</style>
+  <meta charset="UTF-8">
+  <title>Mahjong Slot - Simulasi</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b0b2b;
+      color: white;
+      text-align: center;
+    }
+    .container { padding: 20px; }
+    .card {
+      background: #1b1b3a;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 10px auto;
+      max-width: 350px;
+    }
+    input {
+      width: 90%;
+      padding: 8px;
+      margin: 6px 0;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background: orange;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #slot {
+      display: none;
+      padding: 20px;
+    }
+    .reels {
+      display: flex;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .reel {
+      width: 60px;
+      height: 60px;
+      margin: 0 5px;
+      background: #fff;
+      color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <h1>Mahjong Slot — Simulasi (Belajar)</h1>
-  <div id="topRight"></div>
-</header>
-
-<div class="container">
-
-  <!-- NOTICE -->
-  <div class="card" id="notice">
-    <strong>Penting — Pembelajaran</strong>
-    <p class="muted">Aplikasi ini <strong>hanya simulasi</strong>. Tidak ada transaksi uang nyata. Semua deposit/penarikan & data tersimpan secara lokal di browser (localStorage).</p>
-  </div>
-
-  <!-- AUTH (register/login) -->
-  <div class="card" id="authCard">
-    <div class="cols">
-      <div class="col">
-        <h3>Daftar (Register)</h3>
-        <label>Username</label><input id="regUser" type="text" placeholder="username">
-        <label>Password</label><input id="regPass" type="password" placeholder="password">
-        <label>Nama (opsional)</label><input id="regName" type="text" placeholder="Nama tampilan">
-        <div style="margin-top:10px"><button id="btnRegister">Daftar</button></div>
-        <small class="note">Data tersimpan di browser (localStorage). Hanya untuk latihan.</small>
-      </div>
-
-      <div class="col">
-        <h3>Masuk (Login)</h3>
-        <label>Username</label><input id="logUser" type="text" placeholder="username">
-        <label>Password</label><input id="logPass" type="password" placeholder="password">
-        <div style="margin-top:10px"><button id="btnLogin">Masuk</button></div>
-        <small class="note">Jika lupa, akun tetap di localStorage. Tidak ada keamanan server.</small>
-      </div>
+  <div id="auth" class="container">
+    <h2>Mahjong Slot — Simulasi (Belajar)</h2>
+    <p><b>Penting:</b> Ini hanya simulasi. Tidak ada uang asli.</p>
+    <div class="card">
+      <h3>Daftar (Register)</h3>
+      <input id="regUser" placeholder="Username">
+      <input id="regPass" type="password" placeholder="Password">
+      <button onclick="register()">Daftar</button>
+    </div>
+    <div class="card">
+      <h3>Masuk (Login)</h3>
+      <input id="logUser" placeholder="Username">
+      <input id="logPass" type="password" placeholder="Password">
+      <button onclick="login()">Masuk</button>
     </div>
   </div>
 
-  <!-- Dashboard -->
-  <div class="card" id="dashboard" style="display:none">
-    <div class="cols">
-      <div class="col">
-        <h3>Dashboard</h3>
-        <p>Halo, <span id="displayName"></span> — Saldo: <strong id="displayBalance">0.00</strong></p>
-
-        <label>Deposit (simulasi)</label>
-        <input id="depositAmt" type="number" step="0.01" min="0" placeholder="Masukkan jumlah (contoh 50)">
-        <div style="margin-top:6px">
-          <button id="btnDeposit" class="small-btn">Tambah Deposit</button>
-          <button id="btnWithdraw" class="small-btn">Tarik (simulasi)</button>
-        </div>
-
-        <hr style="border:none;height:8px">
-
-        <h4>Atur Rekening (dummy)</h4>
-        <label>Nama Bank</label><input id="bankName" type="text" placeholder="Contoh: Bank ABC">
-        <label>No. Rekening</label><input id="bankAcc" type="text" placeholder="Nomor rekening">
-        <label>Atas Nama</label><input id="bankOwner" type="text" placeholder="Atas nama">
-        <div style="margin-top:6px">
-          <button id="btnSaveBank" class="small-btn">Simpan Rekening</button>
-        </div>
-
-        <hr style="border:none;height:8px">
-
-        <h4>Kelola Simbol (opsional)</h4>
-        <small class="muted">Kamu bisa upload gambar simbol (PNG/JPG). Jika tidak, simbol default emoji akan dipakai.</small>
-        <div style="margin-top:8px">
-          <input id="fileSymbols" type="file" accept="image/*" multiple>
-          <div style="margin-top:6px"><button id="btnClearSymbols" class="small-btn">Reset ke default</button></div>
-        </div>
-
-      </div>
-
-      <div class="col">
-        <h3>Game: Mahjong Ways (Simulasi)</h3>
-
-        <div class="slot-area">
-          <div class="board card" id="board" aria-hidden="false"></div>
-
-          <div class="controls card">
-            <div class="big">Kontrol & Info</div>
-            <div style="margin-bottom:8px">Taruhan per spin (Rp): <input id="inpBet" type="number" step="0.01" value="0.80" min="0.01" style="width:100%;margin-top:6px"></div>
-
-            <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
-              <div class="spin-button" id="spinBtn">SPIN</div>
-              <button id="autoBtn" class="small-btn">Auto: Off</button>
-            </div>
-
-            <div id="spinStatus" class="status">Siap</div>
-
-            <div style="margin-top:10px">
-              <small class="muted">Riwayat (spin terakhir akan muncul di bawah)</small>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top:12px" class="card">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div><strong>Riwayat Transaksi / Spin</strong></div>
-            <div><button id="btnClearHistory" class="small-btn">Bersihkan</button></div>
-          </div>
-          <table id="historyTable" style="margin-top:8px">
-            <thead><tr><th>Waktu</th><th>Tindakan</th><th>Jumlah</th><th>Keterangan</th></tr></thead>
-            <tbody></tbody>
-          </table>
-        </div>
-
-      </div>
+  <div id="slot">
+    <h2>🎰 Mahjong Slot</h2>
+    <p>Saldo: Rp <span id="saldo">100</span></p>
+    <div class="reels">
+      <div class="reel" id="r1">?</div>
+      <div class="reel" id="r2">?</div>
+      <div class="reel" id="r3">?</div>
     </div>
+    <button onclick="spin()">SPIN</button>
+    <p id="result"></p>
   </div>
-
-  <!-- Footer small note -->
-  <div class="muted" style="margin-top:8px;font-size:13px">Tekan tombol <strong>SPIN</strong> untuk memutar. Semua fitur di sini hanyalah simulasi untuk mempelajari logika game & UI.</div>
-
-</div>
 
 <script>
-/* ---------------------------
-   Simple SPA + LocalStorage
-   - Users stored in localStorage.users = {username: {pass, name, balance, bank, history}}
-   - Symbols: localStorage.symbols = array of dataURLs OR default emoji list
-   --------------------------- */
+  let saldo = 100;
+  const symbols = ["中", "萬", "八", "WILD", "◎", "口"];
 
-const usersKey = 'mh_users_v1';
-const symbolsKey = 'mh_symbols_v1';
-let currentUser = null;
-let autoSpin = false;
-let spinIntervalId = null;
-
-// DEFAULT SYMBOLS: emoji fallback
-const defaultSymbols = [
-  "🀄","🀅","🀆","🀇","🀈","🀉","🀊","🀋","🀌","🀍"
-];
-
-// UTIL: load/save users
-function loadUsers(){ try { return JSON.parse(localStorage.getItem(usersKey) || '{}'); } catch(e){ return {}; } }
-function saveUsers(u){ localStorage.setItem(usersKey, JSON.stringify(u)); }
-
-// AUTH
-document.getElementById('btnRegister').addEventListener('click', () => {
-  const u = document.getElementById('regUser').value.trim();
-  const p = document.getElementById('regPass').value;
-  const name = document.getElementById('regName').value.trim() || u;
-  if(!u || !p){ alert('Username & password wajib'); return; }
-  const users = loadUsers();
-  if(users[u]){ alert('Username sudah ada'); return; }
-  users[u] = { pass: p, name: name, balance: 100.00, bank: {}, history: [] };
-  saveUsers(users);
-  alert('Registrasi berhasil — saldo awal: Rp 100.00 (simulasi)');
-  // auto login
-  loginUser(u);
-});
-
-document.getElementById('btnLogin').addEventListener('click', () => {
-  const u = document.getElementById('logUser').value.trim();
-  const p = document.getElementById('logPass').value;
-  const users = loadUsers();
-  if(!users[u] || users[u].pass !== p){ alert('Login gagal'); return; }
-  loginUser(u);
-});
-
-function loginUser(username){
-  const users = loadUsers();
-  currentUser = username;
-  // show dashboard
-  document.getElementById('authCard').style.display='none';
-  document.getElementById('dashboard').style.display='block';
-  document.getElementById('displayName').innerText = users[username].name;
-  updateBalanceUI();
-  loadUserBank();
-  renderBoardInitial();
-  loadHistory();
-  // top right
-  document.getElementById('topRight').innerHTML = `<span style="margin-right:8px">Hi, ${users[username].name}</span><button id="btnLogout" class="small-btn">Logout</button>`;
-  document.getElementById('btnLogout').addEventListener('click', logout);
-}
-
-function logout(){
-  currentUser = null;
-  document.getElementById('authCard').style.display='block';
-  document.getElementById('dashboard').style.display='none';
-  document.getElementById('topRight').innerHTML = '';
-}
-
-/* ---------- Balance / Deposit (simulated) ---------- */
-document.getElementById('btnDeposit').addEventListener('click', ()=> {
-  const amt = parseFloat(document.getElementById('depositAmt').value);
-  if(!currentUser){ alert('Login dulu'); return; }
-  if(isNaN(amt) || amt <= 0){ alert('Masukkan jumlah yang valid'); return; }
-  const users = loadUsers();
-  users[currentUser].balance = (users[currentUser].balance || 0) + amt;
-  users[currentUser].history.push({time: new Date().toISOString(), type:'deposit', amt: amt, note:'Deposit (simulasi)'});
-  saveUsers(users);
-  updateBalanceUI();
-  loadHistory();
-});
-document.getElementById('btnWithdraw').addEventListener('click', ()=> {
-  const amt = parseFloat(document.getElementById('depositAmt').value);
-  if(!currentUser){ alert('Login dulu'); return; }
-  if(isNaN(amt) || amt <= 0){ alert('Masukkan jumlah yang valid'); return; }
-  const users = loadUsers();
-  if((users[currentUser].balance || 0) < amt){ alert('Saldo tidak cukup'); return; }
-  users[currentUser].balance -= amt;
-  users[currentUser].history.push({time: new Date().toISOString(), type:'withdraw', amt: -amt, note:'Tarik (simulasi)'});
-  saveUsers(users);
-  updateBalanceUI();
-  loadHistory();
-});
-function updateBalanceUI(){
-  const users = loadUsers();
-  const bal = (users[currentUser] && users[currentUser].balance) ? users[currentUser].balance : 0;
-  document.getElementById('displayBalance').innerText = bal.toFixed(2);
-}
-
-/* ---------- Bank info (saved locally) ---------- */
-document.getElementById('btnSaveBank').addEventListener('click', ()=>{
-  if(!currentUser){ alert('Login dulu'); return; }
-  const users = loadUsers();
-  users[currentUser].bank = {
-    name: document.getElementById('bankName').value.trim(),
-    acc: document.getElementById('bankAcc').value.trim(),
-    owner: document.getElementById('bankOwner').value.trim()
-  };
-  saveUsers(users);
-  alert('Rekening disimpan (simulasi)');
-});
-function loadUserBank(){
-  const users = loadUsers();
-  const bk = (users[currentUser] && users[currentUser].bank) ? users[currentUser].bank : {};
-  document.getElementById('bankName').value = bk.name || '';
-  document.getElementById('bankAcc').value = bk.acc || '';
-  document.getElementById('bankOwner').value = bk.owner || '';
-}
-
-/* ---------- Symbols management (upload) ---------- */
-function getSymbols(){
-  try {
-    const s = JSON.parse(localStorage.getItem(symbolsKey) || 'null');
-    if(s && Array.isArray(s) && s.length>0) return s;
-  } catch(e){}
-  return defaultSymbols.slice();
-}
-function setSymbols(arr){
-  localStorage.setItem(symbolsKey, JSON.stringify(arr));
-}
-
-document.getElementById('fileSymbols').addEventListener('change', (ev)=>{
-  const files = ev.target.files;
-  if(!files.length) return;
-  const promises = [];
-  for(let f of files){
-    promises.push(new Promise((res,rej)=>{
-      const r = new FileReader();
-      r.onload = ()=> res(r.result);
-      r.onerror = ()=> rej();
-      r.readAsDataURL(f);
-    }));
-  }
-  Promise.all(promises).then(dataURLs=>{
-    // append to existing symbols
-    const cur = getSymbols().filter(x=>x); // keep existing
-    const merged = cur.concat(dataURLs).slice(0,12); // limit
-    setSymbols(merged);
-    alert('Gambar simbol tersimpan (disimpan di browser). Restart page jika butuh.');
-  }).catch(()=> alert('Gagal membaca file'));
-});
-
-document.getElementById('btnClearSymbols').addEventListener('click', ()=>{
-  localStorage.removeItem(symbolsKey);
-  alert('Simbol dikembalikan ke default (emoji).');
-});
-
-/* ---------- Board render & spin logic ---------- */
-const boardEl = document.getElementById('board');
-function renderBoardInitial(){
-  boardEl.innerHTML = '';
-  const syms = getSymbols();
-  for(let i=0;i<15;i++){
-    const div = document.createElement('div');
-    div.className = 'cell';
-    const val = syms[Math.floor(Math.random()*syms.length)];
-    if(val && val.startsWith('data:')) {
-      const img = document.createElement('img'); img.src = val; div.appendChild(img);
+  // Register
+  function register() {
+    let u = document.getElementById("regUser").value;
+    let p = document.getElementById("regPass").value;
+    if(u && p){
+      localStorage.setItem("user", u);
+      localStorage.setItem("pass", p);
+      alert("Berhasil daftar! Silakan login.");
     } else {
-      div.textContent = val;
+      alert("Isi username & password!");
     }
-    boardEl.appendChild(div);
   }
-}
 
-function spinOnce(betAmt, cb){
-  // animation: rolling with per-column stopping
-  const syms = getSymbols();
-  const cells = boardEl.querySelectorAll('.cell');
-  // Play: deduct balance
-  const users = loadUsers();
-  if(!users[currentUser]){ alert('User hilang'); return; }
-  if((users[currentUser].balance||0) < betAmt){ alert('Saldo tidak cukup'); return; }
-  users[currentUser].balance -= betAmt;
-  users[currentUser].history.push({time:new Date().toISOString(), type:'spin', amt:-betAmt, note:'Spin - Taruhan'});
-  saveUsers(users);
-  updateBalanceUI();
-  document.getElementById('spinStatus').innerText = 'Memutar...';
-  // For each column, we will cycle several times, stopping later columns later
-  const totalCols = 5;
-  const stops = [800, 1200, 1600, 2000, 2400]; // ms when each column stops
-  // start interval that updates all visible cells frequently
-  const start = Date.now();
-  const ticker = setInterval(()=>{
-    for(let i=0;i<15;i++){
-      // change cell if its column not stopped yet
-      const col = i % 5;
-      // if now < stop time for column, show random
-      const elapsed = Date.now()-start;
-      if(elapsed < stops[col]){
-        const val = syms[Math.floor(Math.random()*syms.length)];
-        if(val && val.startsWith('data:')) {
-          if(cells[i].firstChild && cells[i].firstChild.tagName==='IMG') cells[i].firstChild.src = val;
-          else { cells[i].innerHTML = ''; const img = document.createElement('img'); img.src = val; cells[i].appendChild(img); }
-        } else {
-          cells[i].textContent = val;
-        }
-      }
+  // Login
+  function login() {
+    let u = document.getElementById("logUser").value;
+    let p = document.getElementById("logPass").value;
+    if(u === localStorage.getItem("user") && p === localStorage.getItem("pass")){
+      document.getElementById("auth").style.display = "none";
+      document.getElementById("slot").style.display = "block";
+    } else {
+      alert("Login gagal!");
     }
-    // if all stopped, clear
-    if(Date.now()-start > stops[4] + 100){
-      clearInterval(ticker);
-      // final fill (ensure final values)
-      const final = [];
-      for(let i=0;i<15;i++){
-        const val = syms[Math.floor(Math.random()*syms.length)];
-        final.push(val);
-        if(val && val.startsWith('data:')) {
-          if(cells[i].firstChild && cells[i].firstChild.tagName==='IMG') cells[i].firstChild.src = val;
-          else { cells[i].innerHTML = ''; const img = document.createElement('img'); img.src = val; cells[i].appendChild(img); }
-        } else {
-          cells[i].textContent = val;
-        }
-      }
-      // compute winnings
-      const result = computePayout(final, betAmt);
-      // apply
-      if(result.amount>0){
-        const u = loadUsers();
-        u[currentUser].balance += result.amount;
-        u[currentUser].history.push({time:new Date().toISOString(), type:'win', amt: result.amount, note: result.desc});
-        saveUsers(u);
-      } else {
-        const u = loadUsers();
-        u[currentUser].history.push({time:new Date().toISOString(), type:'lose', amt: 0, note: 'No win'});
-        saveUsers(u);
-      }
-      updateBalanceUI();
-      loadHistory();
-      document.getElementById('spinStatus').innerText = result.amount>0 ? `MENANG Rp ${result.amount.toFixed(2)} (${result.desc})` : 'Tidak menang — coba lagi';
-      if(cb) cb(result);
+  }
+
+  // Spin function
+  function spin() {
+    if (saldo <= 0) {
+      alert("Saldo habis!");
+      return;
     }
-  }, 80);
-}
 
-/* Payout rule (simple & educational):
-   - If any symbol appears >=3 times in the whole 15 tiles, payout = bet * multiplier
-   - Multiplier table (example):
-      3 same => x1
-      4 same => x2
-      5 same => x4
-      6 same => x6
-      7+ => x10
-   - Special: if 'WILD' image filename includes 'wild' or emoji '🀄' treated normal here.
-*/
-function computePayout(finalArray, bet){
-  // finalArray holds values: either dataURL or emoji string
-  const counts = {};
-  finalArray.forEach(v=>{
-    // use identifying key: for dataURL, use prefix of data (not ideal), for emoji use itself
-    let key = v;
-    if(typeof v === 'string' && v.startsWith('data:')) {
-      // try to extract "filename" from dataURL? we can't; so just use the whole string (works)
-      key = v;
+    saldo -= 1; // biaya spin
+    let r1 = symbols[Math.floor(Math.random()*symbols.length)];
+    let r2 = symbols[Math.floor(Math.random()*symbols.length)];
+    let r3 = symbols[Math.floor(Math.random()*symbols.length)];
+
+    document.getElementById("r1").innerText = r1;
+    document.getElementById("r2").innerText = r2;
+    document.getElementById("r3").innerText = r3;
+
+    // Cek menang
+    if(r1 === r2 && r2 === r3){
+      saldo += 10;
+      document.getElementById("result").innerText = "Menang! +Rp10";
+    } else {
+      document.getElementById("result").innerText = "Coba lagi!";
     }
-    counts[key] = (counts[key]||0) + 1;
-  });
-  // find max count
-  let max = 0, maxKey = null;
-  for(let k in counts){ if(counts[k]>max){ max = counts[k]; maxKey = k; } }
-  let multiplier = 0;
-  if(max>=3 && max<=3) multiplier = 1;
-  else if(max===4) multiplier = 2;
-  else if(max===5) multiplier = 4;
-  else if(max===6) multiplier = 6;
-  else if(max>=7) multiplier = 10;
-  const amount = bet * multiplier;
-  const desc = max>=3 ? `${max}x${multiplier} simbol '${shortName(maxKey)}'` : 'No win';
-  return { amount, multiplier, count:max, desc };
-}
-function shortName(key){
-  if(!key) return '';
-  if(key.startsWith('data:')) return 'GAMBAR';
-  return key;
-}
 
-/* ---------- history ---------- */
-function loadHistory(){
-  const users = loadUsers();
-  const rows = (users[currentUser] && users[currentUser].history) ? users[currentUser].history.slice().reverse() : [];
-  const tbody = document.querySelector('#historyTable tbody');
-  tbody.innerHTML = '';
-  rows.slice(0,50).forEach(it=>{
-    const tr = document.createElement('tr');
-    const tTime = new Date(it.time).toLocaleString();
-    tr.innerHTML = `<td>${tTime}</td><td>${it.type}</td><td>${it.amt !== undefined ? it.amt : ''}</td><td>${it.note || ''}</td>`;
-    tbody.appendChild(tr);
-  });
-}
-document.getElementById('btnClearHistory').addEventListener('click', ()=>{
-  if(!currentUser) return alert('Login dulu');
-  const users = loadUsers();
-  users[currentUser].history = [];
-  saveUsers(users);
-  loadHistory();
-});
+    document.getElementById("saldo").innerText = saldo;
+  }
+</script>
 
-/* ---------- board initial render ---------- */
-renderBoardInitial();
-
-/* ---------- spin interactions ---------- */
-document.getElementById('spinBtn').addEventListener('click', ()=>{
-  if(!currentUser){ alert('Logi
+</body>
+</html>
