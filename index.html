@@ -3,77 +3,63 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Casino Style Landing — Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, orientation=landscape" />
+  <title>Casino Style Landing — Landscape</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
   <style>
     :root{
       --bg:#140f3a;
-      --panel:#2b1f5a;
       --accent:#ffb400;
       --muted:#b8a6e6;
-      --card-width:220px;
+      --card-width:200px;
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#1b1340 0%, #0f0820 100%);color:#fff;}/* Top bar */
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));border-bottom:1px solid rgba(255,255,255,0.03);flex-wrap:wrap;gap:12px}
-.brand{display:flex;gap:12px;align-items:center;flex:1 1 auto}
-.avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#ffd7a6,#ff8aa2);box-shadow:0 4px 14px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;font-weight:700;color:#3b1b00}
+    body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#1b1340 0%, #0f0820 100%);color:#fff;overflow:hidden;height:100vh;width:100vw;}/* force landscape */
+@media screen and (orientation:portrait){
+  body::before{
+    content:"Silakan putar perangkat Anda ke mode landscape";
+    display:flex;align-items:center;justify-content:center;
+    position:fixed;inset:0;
+    background:#0f0820;color:#fff;font-size:18px;text-align:center;
+    padding:20px;z-index:9999;
+  }
+  .landscape{display:none}
+}
+
+.landscape{display:flex;flex-direction:row;width:100%;height:100%;}
+
+/* Sidebar */
+.sidebar{width:160px;background:rgba(255,255,255,0.05);padding:12px;display:flex;flex-direction:column;justify-content:flex-start;gap:10px}
+.menu{list-style:none;margin:0;padding:0;}
+.menu li{padding:10px;border-radius:8px;cursor:pointer;font-size:14px;margin-bottom:8px}
+.menu li.active{background:linear-gradient(90deg,#3e2b73,#583ea8)}
+
+/* Stage */
+.stage{flex:1;display:flex;flex-direction:column;padding:16px;overflow:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ffd7a6,#ff8aa2);display:flex;align-items:center;justify-content:center;font-weight:700;color:#3b1b00}
 .balance{font-size:13px;color:var(--muted)}
 
-/* Layout */
-.container{display:flex;gap:18px;padding:16px;flex-wrap:wrap}
-.sidebar{width:140px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:12px;flex-shrink:0}
-.menu{list-style:none;padding:0;margin:0}
-.menu li{padding:10px;border-radius:8px;margin-bottom:8px;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px}
-.menu li.active{background:linear-gradient(90deg,#3e2b73, #583ea8);box-shadow:inset 0 -2px 6px rgba(0,0,0,0.25)}
-
-/* Main stage */
-.stage{flex:1 1 300px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));padding:16px;border-radius:12px;min-width:0}
 .carousel-wrap{display:flex;gap:14px;align-items:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
-.card{width:var(--card-width);min-width:var(--card-width);background:linear-gradient(180deg,#2e1a55 0%, #7b4de0 100%);border-radius:14px;padding:12px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.4);scroll-snap-align:start;flex-shrink:0}
-.card .title{font-weight:700;margin-top:8px;font-size:16px;text-align:center}
-.card .hot{position:absolute;left:10px;top:8px;background:var(--accent);color:#111;padding:4px 8px;border-radius:12px;font-weight:700;font-size:12px}
-.card .img{height:160px;border-radius:10px;background-size:cover;background-position:center;display:block}
+.card{width:var(--card-width);min-width:var(--card-width);border-radius:14px;padding:12px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.4);scroll-snap-align:start;background:linear-gradient(180deg,#2e1a55,#7b4de0)}
+.card .img{height:130px;border-radius:10px;background-size:cover;background-position:center}
+.card .title{font-weight:700;text-align:center;margin-top:6px;font-size:15px}
+.hot{position:absolute;top:6px;left:6px;background:var(--accent);color:#111;padding:2px 6px;font-size:11px;border-radius:10px;font-weight:700}
 
-/* bottom nav */
-.bottom{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;margin-top:18px;flex-wrap:wrap;gap:12px}
-.btn{background:linear-gradient(90deg,var(--accent),#ff7b7b);padding:10px 20px;border-radius:10px;color:#1b0b00;font-weight:800;cursor:pointer;border:none}
+/* bottom bar for landscape */
+.bottom{margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,0.05);border-radius:10px}
+.btn{background:linear-gradient(90deg,var(--accent),#ff7b7b);padding:8px 16px;border-radius:10px;border:none;font-weight:700;cursor:pointer;color:#1b0b00}
 
-/* responsive */
-@media(max-width:900px){
-  .container{flex-direction:column}
-  .sidebar{width:100%;display:flex;overflow-x:auto}
-  .menu{display:flex;gap:8px}
-  .menu li{margin-bottom:0;white-space:nowrap}
-}
-@media(max-width:600px){
+@media(max-height:500px){
   .card{width:160px;min-width:160px}
-  .card .img{height:120px}
-  .card .title{font-size:14px}
-  .avatar{width:40px;height:40px;font-size:14px}
-  .topbar{padding:12px}
+  .card .img{height:100px}
+  .card .title{font-size:13px}
 }
 
   </style>
 </head>
 <body>
-  <div class="topbar">
-    <div class="brand">
-      <div class="avatar">VP</div>
-      <div>
-        <div style="font-weight:700">VIP1 Infinix</div>
-        <div class="balance">Rp 0 · Bonus Top-up</div>
-      </div>
-    </div>
-    <div style="display:flex;gap:12px;align-items:center">
-      <div style="text-align:right">
-        <div style="font-weight:700">835x</div>
-        <div style="font-size:12px;color:var(--muted)">vivo 19... Menang</div>
-      </div>
-      <button class="btn">Mulai</button>
-    </div>
-  </div>  <div class="container">
+  <div class="landscape">
     <aside class="sidebar">
       <ul class="menu">
         <li class="active">Populer</li>
@@ -84,12 +70,23 @@
         <li>Slots</li>
       </ul>
     </aside><main class="stage">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:6px">
-    <h2 style="margin:0">Pilihan Teratas</h2>
-    <div style="color:var(--muted);font-size:13px">ph*****26 berhasil menarik Rp 125,000 • 5 detik lalu</div>
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="avatar">VP</div>
+      <div>
+        <div style="font-weight:700">VIP1 Infinix</div>
+        <div class="balance">Rp 0 · Bonus Top-up</div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-weight:700">835x</div>
+      <div style="font-size:12px;color:var(--muted)">vivo 19... Menang</div>
+    </div>
   </div>
 
-  <div class="carousel-wrap" id="carousel">
+  <div style="margin-bottom:10px;font-size:14px;color:var(--muted)">ph*****26 berhasil menarik Rp 125,000 • 5 detik lalu</div>
+
+  <div class="carousel-wrap">
     <div class="card">
       <div class="hot">Hot</div>
       <div class="img" style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=60')"></div>
@@ -100,12 +97,10 @@
       <div class="title">Mahjong Ways</div>
     </div>
     <div class="card" style="background:linear-gradient(180deg,#ffd5b3,#ffbfbf);color:#2b1b12">
-      <div style="font-size:12px;text-align:right;color:rgba(0,0,0,0.6)">NEW • Live</div>
       <div class="img" style="background-image:url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=60')"></div>
       <div class="title">Baccarat</div>
     </div>
     <div class="card" style="background:linear-gradient(180deg,#ffdff0,#ffd0e0);color:#2b1b12">
-      <div style="font-size:12px;text-align:right;color:rgba(0,0,0,0.6)">NEW • Live</div>
       <div class="img" style="background-image:url('https://images.unsplash.com/photo-1534308143481-2c6b3b5d9d5a?auto=format&fit=crop&w=800&q=60')"></div>
       <div class="title">Sic Bo Thailand</div>
     </div>
@@ -120,7 +115,7 @@
   </div>
 
   <div class="bottom">
-    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+    <div style="display:flex;gap:14px;align-items:center">
       <div style="font-weight:800">Top up</div>
       <div style="font-weight:800">Penarikan</div>
       <div style="font-weight:800">Service</div>
@@ -131,4 +126,4 @@
 
   </div>
 </body>
-  </html>
+</html>
