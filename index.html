@@ -1,67 +1,38 @@
 <!doctype html>
-
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, orientation=landscape" />
-  <title>Casino Style Landing — Landscape</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Casino Style Landing</title>
   <style>
-    :root{
-      --bg:#140f3a;
-      --accent:#ffb400;
-      --muted:#b8a6e6;
-      --card-width:200px;
+    body,html{margin:0;padding:0;width:100%;height:100%;overflow:hidden;
+      font-family:sans-serif;background:#1b1340;color:#fff}
+    .landscape-warning{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:#fff;align-items:center;justify-content:center;z-index:999}
+    .wrapper{display:flex;flex-direction:row;width:100%;height:100%}
+    .sidebar{width:150px;background:rgba(255,255,255,0.05);padding:10px;display:flex;flex-direction:column}
+    .sidebar li{list-style:none;padding:10px;margin:4px 0;cursor:pointer;border-radius:6px}
+    .sidebar li.active{background:#583ea8}
+    .stage{flex:1;display:flex;flex-direction:column;padding:10px}
+    .carousel{display:flex;gap:14px;overflow-x:auto}
+    .card{flex:0 0 180px;background:#2e1a55;border-radius:12px;overflow:hidden;cursor:pointer}
+    .card img{width:100%;height:120px;object-fit:cover}
+    .card .title{text-align:center;padding:6px;font-weight:bold}
+    .bottom{margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding:8px;background:rgba(255,255,255,0.05);border-radius:10px}
+    .btn{background:linear-gradient(90deg,#ffb400,#ff7b7b);border:none;padding:8px 16px;border-radius:10px;font-weight:bold;cursor:pointer}
+    @media screen and (orientation:portrait){
+      .wrapper{display:none}
+      .landscape-warning{display:flex}
     }
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,Arial;background:linear-gradient(180deg,#1b1340 0%, #0f0820 100%);color:#fff;overflow:hidden;height:100vh;width:100vw;}/* force landscape */
-@media screen and (orientation:portrait){
-  body::before{
-    content:"Silakan putar perangkat Anda ke mode landscape";
-    display:flex;align-items:center;justify-content:center;
-    position:fixed;inset:0;
-    background:#0f0820;color:#fff;font-size:18px;text-align:center;
-    padding:20px;z-index:9999;
-  }
-  .landscape{display:none}
-}
-
-.landscape{display:flex;flex-direction:row;width:100%;height:100%;}
-
-/* Sidebar */
-.sidebar{width:160px;background:rgba(255,255,255,0.05);padding:12px;display:flex;flex-direction:column;justify-content:flex-start;gap:10px}
-.menu{list-style:none;margin:0;padding:0;}
-.menu li{padding:10px;border-radius:8px;cursor:pointer;font-size:14px;margin-bottom:8px}
-.menu li.active{background:linear-gradient(90deg,#3e2b73,#583ea8)}
-
-/* Stage */
-.stage{flex:1;display:flex;flex-direction:column;padding:16px;overflow:auto}
-.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#ffd7a6,#ff8aa2);display:flex;align-items:center;justify-content:center;font-weight:700;color:#3b1b00}
-.balance{font-size:13px;color:var(--muted)}
-
-.carousel-wrap{display:flex;gap:14px;align-items:flex-start;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
-.card{width:var(--card-width);min-width:var(--card-width);border-radius:14px;padding:12px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.4);scroll-snap-align:start;background:linear-gradient(180deg,#2e1a55,#7b4de0)}
-.card .img{height:130px;border-radius:10px;background-size:cover;background-position:center}
-.card .title{font-weight:700;text-align:center;margin-top:6px;font-size:15px}
-.hot{position:absolute;top:6px;left:6px;background:var(--accent);color:#111;padding:2px 6px;font-size:11px;border-radius:10px;font-weight:700}
-
-/* bottom bar for landscape */
-.bottom{margin-top:auto;display:flex;justify-content:space-between;align-items:center;padding:10px;background:rgba(255,255,255,0.05);border-radius:10px}
-.btn{background:linear-gradient(90deg,var(--accent),#ff7b7b);padding:8px 16px;border-radius:10px;border:none;font-weight:700;cursor:pointer;color:#1b0b00}
-
-@media(max-height:500px){
-  .card{width:160px;min-width:160px}
-  .card .img{height:100px}
-  .card .title{font-size:13px}
-}
-
   </style>
 </head>
 <body>
-  <div class="landscape">
+  <div class="landscape-warning">
+    <h2>Putar perangkat ke mode Landscape</h2>
+  </div>
+
+  <div class="wrapper">
     <aside class="sidebar">
-      <ul class="menu">
+      <ul>
         <li class="active">Populer</li>
         <li>New</li>
         <li>Favorit</li>
@@ -69,61 +40,32 @@
         <li>Kasino</li>
         <li>Slots</li>
       </ul>
-    </aside><main class="stage">
-  <div class="topbar">
-    <div style="display:flex;align-items:center;gap:10px">
-      <div class="avatar">VP</div>
-      <div>
-        <div style="font-weight:700">VIP1 Infinix</div>
-        <div class="balance">Rp 0 · Bonus Top-up</div>
+    </aside>
+    <main class="stage">
+      <div style="margin-bottom:10px;font-size:14px">ph****26 menarik Rp 125,000 • 5 detik lalu</div>
+      <div class="carousel">
+        <div class="card">
+          <img src="https://picsum.photos/300/200?random=1">
+          <div class="title">Gates Of Olympus</div>
+        </div>
+        <div class="card" onclick="location.href='mahjong.html'">
+          <img src="https://picsum.photos/300/200?random=2">
+          <div class="title">Mahjong Ways</div>
+        </div>
+        <div class="card">
+          <img src="https://picsum.photos/300/200?random=3">
+          <div class="title">Baccarat</div>
+        </div>
+        <div class="card">
+          <img src="https://picsum.photos/300/200?random=4">
+          <div class="title">Sic Bo Thailand</div>
+        </div>
       </div>
-    </div>
-    <div style="text-align:right">
-      <div style="font-weight:700">835x</div>
-      <div style="font-size:12px;color:var(--muted)">vivo 19... Menang</div>
-    </div>
-  </div>
-
-  <div style="margin-bottom:10px;font-size:14px;color:var(--muted)">ph*****26 berhasil menarik Rp 125,000 • 5 detik lalu</div>
-
-  <div class="carousel-wrap">
-    <div class="card">
-      <div class="hot">Hot</div>
-      <div class="img" style="background-image:url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=60')"></div>
-      <div class="title">Gates Of Olympus</div>
-    </div>
-    <div class="card">
-      <div class="img" style="background-image:url('https://images.unsplash.com/photo-1541872703-0c10b8a2f6a5?auto=format&fit=crop&w=800&q=60')"></div>
-      <div class="title">Mahjong Ways</div>
-    </div>
-    <div class="card" style="background:linear-gradient(180deg,#ffd5b3,#ffbfbf);color:#2b1b12">
-      <div class="img" style="background-image:url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=60')"></div>
-      <div class="title">Baccarat</div>
-    </div>
-    <div class="card" style="background:linear-gradient(180deg,#ffdff0,#ffd0e0);color:#2b1b12">
-      <div class="img" style="background-image:url('https://images.unsplash.com/photo-1534308143481-2c6b3b5d9d5a?auto=format&fit=crop&w=800&q=60')"></div>
-      <div class="title">Sic Bo Thailand</div>
-    </div>
-    <div class="card">
-      <div class="img" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=800&q=60')"></div>
-      <div class="title">Wild Bounty</div>
-    </div>
-    <div class="card">
-      <div class="img" style="background-image:url('https://images.unsplash.com/photo-1543163521-1bf539c55e9e?auto=format&fit=crop&w=800&q=60')"></div>
-      <div class="title">Starlight Princess 1000</div>
-    </div>
-  </div>
-
-  <div class="bottom">
-    <div style="display:flex;gap:14px;align-items:center">
-      <div style="font-weight:800">Top up</div>
-      <div style="font-weight:800">Penarikan</div>
-      <div style="font-weight:800">Service</div>
-    </div>
-    <button class="btn">Mulai</button>
-  </div>
-</main>
-
+      <div class="bottom">
+        <div style="font-weight:bold">Top up | Penarikan | Service</div>
+        <button class="btn">Mulai</button>
+      </div>
+    </main>
   </div>
 </body>
-</html>
+  </html>
