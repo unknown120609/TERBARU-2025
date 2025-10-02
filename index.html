@@ -1,440 +1,97 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>RprpRp - Demo</title>
-<style>
-  :root{
-    --green:#27ae60;
-    --green-dark:#1f9a4f;
-    --muted:#f2f5f3;
-    --card:#ffffff;
-    --text:#222;
-    --accent:#ff9f1a;
-    --radius:14px;
-    --shadow: 0 6px 18px rgba(0,0,0,0.08);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family: Inter, system-ui, -apple-system, "Helvetica Neue", Arial;
-    background:#f3f6f5;
-    color:var(--text);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-  }
-
-  /* Top header */
-  header.appbar{
-    background:linear-gradient(180deg,var(--green) 0%,var(--green-dark) 100%);
-    color:#fff;
-    padding:12px 14px;
-    display:flex;
-    align-items:center;
-    gap:12px;
-    justify-content:space-between;
-    position:sticky;
-    top:0;
-    z-index:40;
-  }
-  .brand {display:flex; align-items:center; gap:10px;}
-  .brand img {height:30px; width:30px; border-radius:6px; background:#fff;}
-  .brand h1{font-size:18px; margin:0; font-weight:700; letter-spacing:.4px}
-  .top-right {display:flex; align-items:center; gap:8px}
-  .saldo-pill{
-    background:#fff; color:var(--green); padding:6px 12px; border-radius:20px; font-weight:700;
-    box-shadow:0 2px 6px rgba(0,0,0,0.06);
-  }
-  .icon-btn{background:rgba(255,255,255,0.12); border:none; color:#fff; padding:8px; border-radius:8px; cursor:pointer}
-  .icon-btn:active{transform:scale(.98)}
-
-  /* wallet card */
-  .wallet {
-    margin:14px;
-    background:linear-gradient(180deg,#e6f8ee 0%, #dff3e9 100%);
-    border-radius:16px;
-    padding:14px;
-    box-shadow:var(--shadow);
-    border:2px solid rgba(39,174,96,0.12);
-  }
-  .wallet .balance-row{display:flex; align-items:center; justify-content:space-between; gap:10px}
-  .wallet h2{font-size:18px; margin:0 0 6px}
-  .wallet .amount{font-size:22px; color:var(--green-dark); font-weight:800}
-  .wallet .wallet-actions{display:flex; gap:10px; margin-top:12px}
-  .btn-outline{background:#fff;border:1px solid #e6e6e6;padding:10px 12px;border-radius:10px;cursor:pointer}
-  .btn-primary{background:var(--green); color:#fff; border:none; padding:10px 14px; border-radius:10px; cursor:pointer;}
-
-  .reward-row{display:flex; align-items:center; gap:10px; margin-top:12px}
-  .reward-badge{background:#fff; color:var(--green); padding:8px 10px; border-radius:22px; font-weight:700}
-
-  /* banner */
-  .banner{margin:14px; border-radius:12px; overflow:hidden; box-shadow:var(--shadow)}
-  .banner img{display:block; width:100%; height:110px; object-fit:cover}
-
-  /* menu buttons */
-  .menu-grid{display:flex; gap:10px; padding:12px 14px; align-items:center; justify-content:center}
-  .menu-item{background:var(--card); padding:10px 14px; border-radius:999px; display:flex; gap:8px; align-items:center; box-shadow:0 4px 12px rgba(0,0,0,0.04); cursor:pointer}
-  .menu-item img{width:26px; height:26px; border-radius:6px}
-
-  /* horizontal game strip */
-  .strip {padding:10px 6px;}
-  .strip-title{display:flex; align-items:center; justify-content:space-between; padding:0 8px; margin-bottom:8px}
-  .strip-scroll{display:flex; gap:8px; overflow:auto; padding:6px 8px}
-  .tile{min-width:120px; background:#fff; border-radius:10px; padding:8px; box-shadow:0 6px 18px rgba(0,0,0,0.06); cursor:pointer; text-align:center}
-  .tile img{width:100%; height:80px; object-fit:cover; border-radius:8px}
-  .tile p{margin:6px 0 0; font-size:13px; color:#333}
-
-  /* sections */
-  .section {padding:8px 10px 70px}
-  .section h3{margin:6px 0 10px; font-size:16px}
-
-  .games-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
-  .game-card{background:#fff; border-radius:12px; padding:8px; text-align:center; box-shadow:0 6px 18px rgba(0,0,0,0.06); cursor:pointer}
-  .game-card img{width:100%; height:80px; object-fit:cover; border-radius:10px}
-  .game-card p{margin:8px 0 0; font-size:13px}
-
-  /* floating actions */
-  .floating-actions {position:fixed; right:14px; bottom:120px; display:flex; flex-direction:column; gap:12px; z-index:30}
-  .fab{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#7df 0%, #7cd 100%);box-shadow:0 8px 20px rgba(0,0,0,0.18);cursor:pointer;border:none}
-  .fab.green{background:linear-gradient(180deg,var(--green) 0%,var(--green-dark) 100%) ; color:#fff}
-  .fab.chat{background:linear-gradient(180deg,#7c7cff 0%, #6a6aff); color:#fff}
-
-  /* bottom nav */
-  nav.bottom-nav{position:fixed; left:0; right:0; bottom:0; height:68px; background:#fff; display:flex; align-items:center; justify-content:space-around; border-top:1px solid #eee; z-index:35}
-  .nav-item{display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; font-size:12px; color:#666}
-  .nav-item.active{color:var(--green); font-weight:700}
-  .nav-item img{height:22px}
-
-  /* account modal / profile */
-  .sheet {position:fixed; left:0; right:0; bottom:0; background:#fff; border-top-left-radius:18px; border-top-right-radius:18px; box-shadow:0 -6px 30px rgba(0,0,0,0.12); transform:translateY(110%); transition:transform .35s ease; z-index:50}
-  .sheet.show{transform:translateY(0)}
-  .sheet .profile-head{padding:18px; background:linear-gradient(180deg,#3ad67a 0%, #2fa35d 100%); color:#fff; border-top-left-radius:18px; border-top-right-radius:18px}
-  .profile-row{display:flex; gap:12px; align-items:center}
-  .avatar{width:70px;height:70px;border-radius:50%;border:4px solid #fff; overflow:hidden}
-  .avatar img{width:100%;height:100%;object-fit:cover}
-  .profile-stats{flex:1}
-  .wallet-card{background:#f7fffb;padding:14px;margin:12px;border-radius:12px;border:1px solid rgba(39,174,96,0.08)}
-
-  .menu-list{padding:12px}
-  .menu-list .item{background:#fff;border-radius:10px;padding:14px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;border:1px solid #f0f0f0}
-  .link-muted{color:#777;font-size:13px}
-
-  /* modal bank link */
-  .modal {position:fixed; left:0; top:0; right:0; bottom:0; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:60; visibility:hidden; opacity:0; transition:all .2s}
-  .modal.show{visibility:visible; opacity:1}
-  .modal .box{background:#fff;border-radius:12px;padding:14px; width:92%; max-width:360px}
-  .modal input{width:100%; padding:10px; margin-top:8px; border-radius:8px; border:1px solid #ddd}
-
-  /* small helpers */
-  .small{font-size:12px;color:#666}
-  @media(min-width:900px){ .container{max-width:900px;margin:20px auto} }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Rprprp</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+    <header>
+        <nav class="main-nav">
+            <button>Semua</button>
+            <button>Buka Kunci Koin</button>
+            <button>Undang</button>
+            <button>Komisi</button>
+        </nav>
+    </header>
 
-  <!-- HEADER -->
-  <header class="appbar">
-    <div class="brand">
-      <img src="https://i.ibb.co/9t9z2mN/rprprp-icon.png" alt="logo">
-      <h1>RprpRp</h1>
-    </div>
-    <div class="top-right">
-      <div class="saldo-pill" id="saldoTop">Rp 0</div>
-      <button class="icon-btn" id="btnWallet" title="Dompet">💳</button>
-      <button class="icon-btn" id="btnBell" title="Notifikasi">🔔</button>
-    </div>
-  </header>
+    <main class="container">
+        <section class="referral-section">
+            <p class="instruction">Jika Anda memiliki komunitas pribadi, hubungi kami dan sebarkan link setiap hari!</p>
+            <div class="link-box">
+                <p>Kirimkan link ke teman-teman Anda</p>
+                <div class="link-input">https://rprprproll.com/2096/?c=VL9Y4UX5</div>
+            </div>
+            <div class="share-buttons">
+                <i class="fab fa-facebook-f"></i>
+                <i class="fab fa-whatsapp"></i>
+                <i class="fab fa-telegram-plane"></i>
+                <i class="fab fa-instagram"></i>
+            </div>
+        </section>
+        
+        <section class="data-acara">
+            <div class="header-data">
+                <h2>Data acara</h2>
+                <button>Lihat semua</button>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <p>Rp0</p>
+                    <span>Pendapatan hari ini</span>
+                </div>
+                <div class="stat-card">
+                    <p>Rp4.000</p>
+                    <span>Pendapatan kemarin</span>
+                </div>
+                <div class="stat-card total-balance">
+                    <p>Rp6.447,51</p>
+                    <span>Total pendapatan</span>
+                </div>
+                <div class="stat-card">
+                    <p>0</p>
+                    <span>Daftar</span>
+                </div>
+                <div class="stat-card">
+                    <p>0</p>
+                    <span>Undangan Berlaku Terbaru</span>
+                </div>
+                <div class="stat-card">
+                    <p>Rp0</p>
+                    <span>Total deposit</span>
+                </div>
+            </div>
+        </section>
 
-  <!-- WALLET CARD -->
-  <div class="wallet" id="walletCard">
-    <div class="balance-row">
-      <div>
-        <h2>Dompet permainan</h2>
-        <div class="amount" id="balanceDisplay">Rp 0</div>
-        <div class="small">Dompet utama untuk bermain</div>
-      </div>
-      <div style="text-align:right">
-        <button class="btn-outline small" onclick="openWithdraw()">Penarikan</button>
-        <button class="btn-primary" onclick="openDeposit()">Deposit</button>
-      </div>
-    </div>
+        <section class="leaderboard-section">
+            <h2>Papan pemimpin undangan</h2>
+            <div class="leaderboard-cards">
+                <div class="leader-card">
+                    <img src="placeholder-isaac.jpg" alt="Isaac21433">
+                    <p class="name">Isaac21433</p>
+                    <p class="amount">Rp446.835,44</p>
+                </div>
+                </div>
+        </section>
 
-    <div class="reward-row">
-      <div class="reward-badge">Ree koin</div>
-      <div style="margin-left:auto; color:var(--green-dark); font-weight:700" id="reeCoin">0,00</div>
-      <div style="margin-left:8px"><button class="btn-outline small" onclick="useCoin()">Telah digunakan</button></div>
-    </div>
-  </div>
+        <section class="game-section">
+            <h2>🔥 Gandakan Bonus Deposit Pertama Harian 30% 🔥</h2>
+            <div class="top-winners">
+                </div>
+            <div class="game-nav">
+                <button class="active">VIP</button>
+                <button>Roulet</button>
+                <button>Undang</button>
+            </div>
+            </section>
+    </main>
 
-  <!-- Banner -->
-  <div class="banner">
-    <img id="bannerImg" src="https://i.ibb.co/gjS1S0V/banner-slot.jpg" alt="promo">
-  </div>
-
-  <!-- quick menu -->
-  <div class="menu-grid" role="navigation" aria-label="menu">
-    <div class="menu-item"><img src="https://i.ibb.co/7Y3wJ8Z/vip.png" alt=""><div>VIP</div></div>
-    <div class="menu-item"><img src="https://i.ibb.co/P9Q1M6X/roulet.png" alt=""><div>Roulet</div></div>
-    <div class="menu-item"><img src="https://i.ibb.co/3c9f2X0/invite.png" alt=""><div>Undang</div></div>
-    <div class="menu-item"><img src="https://i.ibb.co/7X0nF9G/gift.png" alt=""><div>Bonus</div></div>
-  </div>
-
-  <!-- strip terbaru -->
-  <div class="strip">
-    <div class="strip-title">
-      <strong>🔥 Terbaru</strong>
-      <span class="small link-muted">Lihat semua »</span>
-    </div>
-    <div class="strip-scroll" id="stripScroll">
-      <!-- tiles inserted by JS -->
-    </div>
-  </div>
-
-  <!-- Section Hot -->
-  <div class="section">
-    <h3>Hot</h3>
-    <div class="games-grid" id="gamesGrid">
-      <!-- game cards by JS -->
-    </div>
-  </div>
-
-  <!-- floating actions -->
-  <div class="floating-actions">
-    <button class="fab chat" title="Chat live" onclick="alert('Live chat belum tersedia')">💬</button>
-    <button class="fab green" title="Hadiah" onclick="alert('Hadiah belum tersedia')">🎁</button>
-  </div>
-
-  <!-- bottom nav -->
-  <nav class="bottom-nav">
-    <div class="nav-item active" onclick="navClick(0)"><img src="https://i.ibb.co/YdrgT4n/home.png"><div>Beranda</div></div>
-    <div class="nav-item" onclick="navClick(1)"><img src="https://i.ibb.co/1Qb2GqN/invite-white.png"><div>Undang</div></div>
-    <div class="nav-item" onclick="navClick(2)"><img src="https://i.ibb.co/Jj2yKxF/pool.png"><div>Kolam Hadiah</div></div>
-    <div class="nav-item" onclick="navClick(3)"><img src="https://i.ibb.co/2W8Qw8X/gift2.png"><div>Promosi</div></div>
-    <div class="nav-item" id="navAccount" onclick="openSheet()"><img src="https://i.ibb.co/2M2Z2t2/user.png"><div>Akun</div></div>
-  </nav>
-
-  <!-- bottom sheet account -->
-  <div class="sheet" id="accountSheet" aria-hidden="true">
-    <div class="profile-head">
-      <div style="display:flex;align-items:center;gap:12px">
-        <div class="avatar"><img id="avatarImg" src="https://i.ibb.co/7k6h8hF/default-avatar.png" alt="avatar"></div>
-        <div class="profile-stats">
-          <div style="display:flex;align-items:center;gap:6px">
-            <h3 id="profileName" style="margin:0;color:#fff">Tamu</h3>
-            <button style="background:rgba(255,255,255,0.15);border:none;color:#fff;padding:6px;border-radius:8px;cursor:pointer" onclick="editProfile()">✏️</button>
-          </div>
-          <div class="small">ID : <span id="profileId">-</span></div>
-          <div class="small">Akun : <span id="profilePhone">-</span></div>
+    <div class="fixed-buttons">
         </div>
-      </div>
-    </div>
 
-    <div style="padding:12px">
-      <div class="wallet-card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div>
-            <div class="small">Dompet permainan</div>
-            <div style="font-weight:800;font-size:20px" id="sheetBalance">Rp 0</div>
-          </div>
-          <div>
-            <button class="btn-outline small" onclick="openWithdraw()">Penarikan</button>
-            <button class="btn-primary" onclick="openDeposit()">Deposit</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="menu-list">
-        <div class="item" onclick="alert('VIP rewards')"><div>VIP Eksklusif Rewards</div><div>›</div></div>
-        <div class="item" onclick="alert('Kupon Hadiah')"><div>Kupon Hadiah</div><div>›</div></div>
-        <div class="item" onclick="alert('FAQ')"><div>FAQ</div><div>›</div></div>
-        <div class="item" onclick="showBankModal()"><div>Kaitkan Rekening</div><div>›</div></div>
-        <div class="item" onclick="logout()"><div style="color:#e74c3c">Keluar</div><div>›</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- bank modal -->
-  <div class="modal" id="bankModal">
-    <div class="box">
-      <h3>Kaitkan Rekening</h3>
-      <input id="bankName" placeholder="Nama Bank" />
-      <input id="bankNo" placeholder="Nomor Rekening" />
-      <input id="bankOwner" placeholder="Atas Nama" />
-      <button onclick="saveBank()">Simpan</button>
-      <button style="background:#e74c3c;margin-top:8px;color:#fff" onclick="closeBankModal()">Batal</button>
-    </div>
-  </div>
-
-  <!-- deposit modal -->
-  <div class="modal" id="depositModal">
-    <div class="box">
-      <h3>Deposit</h3>
-      <input id="depositValue" type="number" placeholder="Masukkan jumlah (misal 10000)" />
-      <button onclick="doDeposit()">OK</button>
-      <button style="background:#e74c3c;margin-top:8px;color:#fff" onclick="closeDepositModal()">Batal</button>
-    </div>
-  </div>
-
-  <!-- withdraw modal -->
-  <div class="modal" id="withdrawModal">
-    <div class="box">
-      <h3>Penarikan</h3>
-      <input id="withdrawValue" type="number" placeholder="Masukkan jumlah" />
-      <button onclick="doWithdraw()">OK</button>
-      <button style="background:#e74c3c;margin-top:8px;color:#fff" onclick="closeWithdrawModal()">Batal</button>
-    </div>
-  </div}
-<script>
-/* ---------- Demo data & utils ---------- */
-const demoGames = [
-  {title:'Mahjong Wins 3', img:'https://i.ibb.co/0rVddmy/mahjong.jpg', link:'https://rprprproll.com:2096/?c=VL9Y4UX5'},
-  {title:'Mega Wheel', img:'https://i.ibb.co/0M8zfw7/mega-wheel.jpg', link:'https://rprprproll.com:2096/?c=VL9Y4UX5'},
-  {title:'Treasures of Aztec', img:'https://i.ibb.co/k8g5ZTb/aztec.jpg', link:'https://rprprproll.com:2096/?c=VL9Y4UX5'},
-  {title:'Mahjong Ways', img:'https://i.ibb.co/0rVddmy/mahjong.jpg', link:'https://rprprproll.com:2096/?c=VL9Y4UX5'},
-  {title:'Lucky Neko', img:'https://i.ibb.co/W3hfhvW/neko.jpg', link:'https://rprprproll.com:2096/?c=VL9Y4UX5'},
-  {title:'Starlight Princess', img:'https://i.ibb.co/5R2vvGn/starlight.jpg', link:'https://rprprproll.com:2096/?c=VL9Y4UX5'},
-  {title:'Gates of Olympus', img:'https://i.ibb.co/ZmQ0wWp/olympus.jpg', link:'https://rprprproll.com:2096/?c=VL9Y4UX5'},
-  {title:'Wild Bounty', img:'https://i.ibb.co/0M8zfw7/mega-wheel.jpg', link:'https://rprprproll.com:2096/?c=VL9Y4UX5'},
-  {title:'Sweet Bonanza', img:'https://i.ibb.co/n8z5JjH/sweet.jpg', link:'https://rprprproll.com:2096/?c=VL9Y4UX5'},
-  {title:'Bonanza Gold', img:'https://i.ibb.co/tZ2D9Ks/bonanza.jpg', link:'https://rprprproll.com:2096/?c=VL9Y4UX5'}
-];
-
-function q(sel){return document.querySelector(sel)}
-function qs(sel){return Array.from(document.querySelectorAll(sel))}
-
-/* ---------- render UI ---------- */
-function renderStrip(){
-  const strip = q('#stripScroll'); strip.innerHTML='';
-  demoGames.slice(0,6).forEach(g=>{
-    const el = document.createElement('div'); el.className='tile';
-    el.innerHTML = `<img src="${g.img}" alt="${g.title}"><p>${g.title}</p>`;
-    el.onclick = ()=>openGame(g);
-    strip.appendChild(el);
-  })
-}
-function renderGrid(){
-  const grid = q('#gamesGrid'); grid.innerHTML='';
-  demoGames.forEach(g=>{
-    const el = document.createElement('div'); el.className='game-card';
-    el.innerHTML = `<img src="${g.img}" alt="${g.title}"><p>${g.title}</p>`;
-    el.onclick = ()=>openGame(g);
-    grid.appendChild(el);
-  })
-}
-
-/* ---------- balance & storage ---------- */
-function getSaldo(){ return parseFloat(localStorage.getItem('saldo') || '0') }
-function setSaldo(v){ localStorage.setItem('saldo', String(v)); updateBalanceUI() }
-function updateBalanceUI(){
-  const v = getSaldo();
-  q('#balanceDisplay').innerText = 'Rp ' + numberWithCommas(v);
-  q('#saldoTop').innerText = 'Rp ' + numberWithCommas(v);
-  q('#sheetBalance').innerText = 'Rp ' + numberWithCommas(v);
-}
-function numberWithCommas(x){
-  if(!isFinite(x)) return x;
-  return x.toLocaleString('id-ID', {maximumFractionDigits:0});
-}
-
-/* ---------- deposit & withdraw ---------- */
-function openDeposit(){ q('#depositModal').classList.add('show') ; q('#depositModal').style.visibility='visible' }
-function closeDepositModal(){ q('#depositModal').classList.remove('show'); q('#depositModal').style.visibility='hidden' }
-function doDeposit(){
-  const amt = parseInt(q('#depositValue').value || 0);
-  if(amt<=0){ alert('Masukkan jumlah valid'); return; }
-  setSaldo(getSaldo() + amt);
-  closeDepositModal();
-  alert('Deposit berhasil (demo).');
-}
-
-function openWithdraw(){ q('#withdrawModal').classList.add('show'); q('#withdrawModal').style.visibility='visible' }
-function closeWithdrawModal(){ q('#withdrawModal').classList.remove('show'); q('#withdrawModal').style.visibility='hidden' }
-function doWithdraw(){
-  const amt = parseInt(q('#withdrawValue').value || 0);
-  if(amt<=0){ alert('Masukkan jumlah valid'); return; }
-  if(amt > getSaldo()){ alert('Saldo tidak cukup'); return; }
-  setSaldo(getSaldo() - amt);
-  closeWithdrawModal();
-  alert('Penarikan berhasil (demo).');
-}
-
-/* ---------- bank link ---------- */
-function showBankModal(){ 
-  q('#bankModal').classList.add('show'); 
-  q('#bankModal').style.visibility='visible';
-  q('#bankName').value = localStorage.getItem('bankName') || '';
-  q('#bankNo').value   = localStorage.getItem('bankNo') || '';
-  q('#bankOwner').value= localStorage.getItem('bankOwner') || '';
-}
-function closeBankModal(){ q('#bankModal').classList.remove('show'); q('#bankModal').style.visibility='hidden' }
-function saveBank(){
-  const name = q('#bankName').value.trim();
-  const no = q('#bankNo').value.trim();
-  const owner = q('#bankOwner').value.trim();
-  if(!name || !no || !owner) { alert('Isi semua field'); return; }
-  localStorage.setItem('bankName', name);
-  localStorage.setItem('bankNo', no);
-  localStorage.setItem('bankOwner', owner);
-  closeBankModal();
-  alert('Rekening tersimpan (demo).');
-  renderAccountInfo();
-}
-
-/* ---------- account sheet ---------- */
-function openSheet(){ 
-  q('#accountSheet').classList.add('show'); 
-  q('#accountSheet').setAttribute('aria-hidden','false'); 
-  renderAccountInfo() 
-}
-function closeSheet(){ 
-  q('#accountSheet').classList.remove('show'); 
-  q('#accountSheet').setAttribute('aria-hidden','true') 
-}
-
-function renderAccountInfo(){
-  const name = localStorage.getItem('profileName') || 'Pengguna Demo';
-  const id = localStorage.getItem('profileId') || 'User' + Math.floor(Math.random()*100000);
-  const phone = localStorage.getItem('profilePhone') || '+62 8xxxxxxx';
-  const avatar = localStorage.getItem('profileAvatar') || 'https://i.ibb.co/7k6h8hF/default-avatar.png';
-  q('#profileName').innerText = name;
-  q('#profileId').innerText = id;
-  q('#profilePhone').innerText = phone;
-  q('#avatarImg').src = avatar;
-  // bank info
-  const bank = localStorage.getItem('bankName'), no = localStorage.getItem('bankNo'), owner = localStorage.getItem('bankOwner');
-  const menuList = q('.menu-list');
-  menuList.querySelectorAll('.bank-info').forEach(e=>e.remove());
-  if(bank && no && owner){
-    const el = document.createElement('div'); 
-    el.className='bank-info item'; 
-    el.innerHTML = `<div><strong>Rekening</strong><div class="small">${bank} - ${no}<br/>a.n. ${owner}</div></div><div>›</div>`;
-    menuList.insertBefore(el, menuList.firstChild);
-  }
-}
-
-/* ---------- profile edit ---------- */
-function editProfile(){
-  const newName = prompt('Ubah nama', localStorage.getItem('profileName') || 'Pengguna Demo');
-  if(newName) localStorage.setItem('profileName', newName);
-  renderAccountInfo();
-}
-
-/* ---------- logout (demo) ---------- */
-function logout(){ if(confirm('Keluar dari demo?')){ localStorage.clear(); location.reload(); } }
-
-/* ---------- game open ---------- */
-function openGame(g){
-  window.open(g.link, '_blank');
-}
-
-/* ---------- init ---------- */
-function init(){
-  if(!localStorage.getItem('saldo')) localStorage.setItem('saldo','0');
-  renderStrip();
-  renderGrid();
-  updateBalanceUI();
-}
-init();
-</script>
+    <footer>
+        </footer>
+</body>
+</html>
