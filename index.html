@@ -6,121 +6,216 @@
   <title>Aplikasi Slot Demo</title>
   <style>
     * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
-    body {background:#f5f5f5; color:#333; padding-bottom:60px;}
-    a {text-decoration:none; color:inherit;}
+    body {background:#f5f5f5; color:#333;}
 
-    /* Topbar saldo */
+    /* LOADING SCREEN */
+    #loading {
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:#2ecc71;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      flex-direction:column;
+      z-index:9999;
+      color:#fff;
+      font-size:18px;
+      animation:fadeOut 1s ease forwards;
+      animation-delay:2s;
+    }
+    #loading.hidden {display:none;}
+    @keyframes fadeOut {to{opacity:0; visibility:hidden;}}
+
+    /* HEADER */
     header {
-      background:#27ae60; 
+      background:#2ecc71;
       padding:10px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       color:#fff;
     }
-    header .saldo-box {
+    header h1 {font-size:20px;}
+    .saldo {
+      background:#fff;
+      color:#2ecc71;
+      padding:5px 10px;
+      border-radius:20px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    /* SLIDER BANNER */
+    .slider {
+      position:relative;
+      overflow:hidden;
+      height:150px;
+      margin:10px;
+      border-radius:10px;
+    }
+    .slides {
       display:flex;
-      align-items:center;
-      gap:10px;
+      width:300%;
+      animation:slide 10s infinite;
     }
-    header .saldo {
-      background:#fff; color:#27ae60; padding:5px 12px; border-radius:20px; font-weight:bold;
-    }
-    header button {
-      background:#fff; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;
-      color:#27ae60; font-weight:bold;
-    }
-
-    /* Running text event */
-    .marquee {
-      background:#fff; padding:5px; font-size:14px; color:#e74c3c;
-      overflow:hidden; white-space:nowrap;
-    }
-    .marquee span {
-      display:inline-block; padding-left:100%; animation:marquee 15s linear infinite;
-    }
-    @keyframes marquee {
+    .slides img {width:100%; object-fit:cover;}
+    @keyframes slide {
       0% {transform:translateX(0);}
-      100% {transform:translateX(-100%);}
+      33% {transform:translateX(-100%);}
+      66% {transform:translateX(-200%);}
+      100% {transform:translateX(0);}
     }
 
-    /* Banner slider */
-    .banner-slider {position:relative; overflow:hidden;}
-    .banner-slider img {width:100%; height:150px; object-fit:cover;}
-    
-    /* Menu kategori */
-    .menu-grid {
-      display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; padding:10px;
-      background:#fff; text-align:center;
+    /* MENU */
+    .menu {
+      display:flex;
+      justify-content:space-around;
+      padding:10px;
+      background:#fff;
     }
-    .menu-grid div {
-      font-size:13px; color:#333;
+    .menu button {
+      background:#2ecc71;
+      color:#fff;
+      border:none;
+      padding:10px 15px;
+      border-radius:20px;
+      cursor:pointer;
+      font-size:14px;
+      transition:transform 0.2s ease;
     }
-    .menu-grid img {width:40px; margin-bottom:5px;}
+    .menu button:hover {transform:scale(1.1);}
 
-    /* Section title */
-    .section-title {margin:15px 10px; font-weight:bold; font-size:16px;}
+    /* SECTION */
+    .section-title {
+      margin:15px 10px;
+      font-weight:bold;
+      font-size:16px;
+    }
 
-    /* Games */
+    /* GAMES */
     .games-grid {
-      display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; padding:10px;
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:10px;
+      padding:10px;
     }
     .game {
-      background:#fff; border-radius:10px; overflow:hidden; text-align:center;
-      font-size:14px; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;
-      transition:transform 0.2s;
+      background:#fff;
+      border-radius:10px;
+      overflow:hidden;
+      text-align:center;
+      font-size:14px;
+      box-shadow:0 2px 4px rgba(0,0,0,0.1);
+      cursor:pointer;
+      transition:transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .game:hover {transform:scale(1.05);}
-    .game img {width:100%; height:90px; object-fit:cover;}
+    .game img {
+      width:100%;
+      height:90px;
+      object-fit:cover;
+    }
+    .game:hover {transform:scale(1.05); box-shadow:0 4px 8px rgba(0,0,0,0.15);}
+    .game:active {animation:bounce 0.3s;}
+    @keyframes bounce {
+      0% {transform:scale(1);}
+      50% {transform:scale(0.9);}
+      100% {transform:scale(1);}
+    }
 
-    /* Floating button */
-    .floating {
-      position:fixed; bottom:80px; right:20px;
-      display:flex; flex-direction:column; gap:10px;
-    }
-    .floating button {
-      background:#27ae60; color:#fff; border:none; padding:12px; border-radius:50%; cursor:pointer;
-      box-shadow:0 4px 8px rgba(0,0,0,0.2); font-size:18px;
-    }
-
-    /* Footer nav */
+    /* FOOTER */
     footer {
-      background:#fff; padding:10px; display:flex; justify-content:space-around;
-      border-top:1px solid #ddd; position:fixed; bottom:0; width:100%;
+      background:#fff;
+      padding:10px;
+      display:flex;
+      justify-content:space-around;
+      border-top:1px solid #ddd;
+      position:fixed;
+      bottom:0;
+      width:100%;
     }
-    footer div {text-align:center; font-size:13px; color:#666;}
-    footer div.active {color:#27ae60; font-weight:bold;}
+    footer div {
+      text-align:center;
+      font-size:13px;
+      color:#666;
+      transition:color 0.2s ease;
+      cursor:pointer;
+    }
+    footer div.active {color:#2ecc71; font-weight:bold;}
+    footer div:hover {color:#2ecc71;}
+
+    /* NOTIFIKASI */
+    .notif {
+      position:fixed;
+      top:20px; right:20px;
+      background:#27ae60;
+      color:#fff;
+      padding:10px 15px;
+      border-radius:8px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.3);
+      opacity:0;
+      transition:opacity 0.5s;
+      z-index:999;
+    }
+    .notif.show {opacity:1;}
+
+    /* FLOATING BUTTON */
+    .float-btn {
+      position:fixed;
+      bottom:70px;
+      right:20px;
+      background:#e67e22;
+      color:#fff;
+      padding:15px 20px;
+      border-radius:50px;
+      box-shadow:0 2px 6px rgba(0,0,0,0.3);
+      cursor:pointer;
+      animation:pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% {transform:scale(1);}
+      50% {transform:scale(1.1);}
+      100% {transform:scale(1);}
+    }
+
+    /* DARK MODE */
+    body.dark {background:#222; color:#eee;}
+    body.dark header {background:#111;}
+    body.dark .menu, body.dark footer, body.dark .game {background:#333; color:#eee;}
+    body.dark .saldo {background:#2ecc71; color:#fff;}
   </style>
 </head>
 <body>
 
-  <!-- Topbar saldo -->
+  <!-- LOADING -->
+  <div id="loading">
+    <h2>🎰 Loading...</h2>
+    <p>Harap tunggu sebentar...</p>
+  </div>
+
+  <!-- HEADER -->
   <header>
-    <div class="saldo-box">
-      <div class="saldo">Rp 26,33</div>
-      <button>Deposit</button>
-      <button>Tarik</button>
-    </div>
-    <div>🔔</div>
+    <h1>RprpRp</h1>
+    <div class="saldo" onclick="tambahSaldo()">Rp 26,33</div>
   </header>
 
-  <!-- Running text -->
-  <div class="marquee"><span>🎉 Selamat kepada Budi yang baru saja WD Rp 2.000.000 | 🎁 Bonus new member 100% | 🔥 Event cashback setiap hari!</span></div>
-
-  <!-- Banner promo -->
-  <div class="banner-slider">
-    <img src="https://i.ibb.co/gjS1S0V/banner-slot.jpg" alt="Promo Banner">
+  <!-- SLIDER -->
+  <div class="slider">
+    <div class="slides">
+      <img src="https://i.ibb.co/gjS1S0V/banner-slot.jpg" alt="">
+      <img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg" alt="">
+      <img src="https://i.ibb.co/k8g5ZTb/aztec.jpg" alt="">
+    </div>
   </div>
 
-  <!-- Menu kategori -->
-  <div class="menu-grid">
-    <div><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Slot</p></div>
-    <div><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Casino</p></div>
-    <div><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Sports</p></div>
-    <div><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Tembak Ikan</p></div>
+  <!-- MENU -->
+  <div class="menu">
+    <button>VIP</button>
+    <button>Roulet</button>
+    <button>Undang</button>
   </div>
 
-  <!-- Section terbaru -->
+  <!-- SECTION -->
   <div class="section-title">🔥 Terbaru</div>
   <div class="games-grid">
     <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Mahjong Wins 3</p></div>
@@ -128,7 +223,6 @@
     <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Treasures of Aztec</p></div>
   </div>
 
-  <!-- Section hot -->
   <div class="section-title">🔥 Hot</div>
   <div class="games-grid">
     <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Mahjong Ways</p></div>
@@ -139,20 +233,51 @@
     <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Mahjong Ways 2</p></div>
   </div>
 
-  <!-- Floating button -->
-  <div class="floating">
-    <button>⬇️</button>
-    <button>💬</button>
-  </div>
-
-  <!-- Footer nav -->
+  <!-- FOOTER -->
   <footer>
-    <div class="active">🏠 Beranda</div>
-    <div>🤝 Undang</div>
-    <div>🎁 Hadiah</div>
-    <div>🔥 Promosi</div>
-    <div>👤 Akun</div>
+    <div class="active" onclick="gantiTab(this)">🏠 Beranda</div>
+    <div onclick="gantiTab(this)">🤝 Undang</div>
+    <div onclick="gantiTab(this)">🎁 Hadiah</div>
+    <div onclick="gantiTab(this)">🔥 Promosi</div>
+    <div onclick="gantiTab(this)">👤 Akun</div>
   </footer>
 
+  <!-- FLOATING BUTTON -->
+  <div class="float-btn" onclick="alert('Download APK belum tersedia')">⬇️ Download</div>
+
+  <!-- NOTIFIKASI -->
+  <div class="notif" id="notif">User123 baru menang Rp 2.000.000 🎉</div>
+
+  <script>
+    // Loading screen
+    setTimeout(()=>{document.getElementById("loading").classList.add("hidden")},2500);
+
+    // Demo saldo
+    let saldo = 26.33;
+    function tambahSaldo(){
+      saldo += Math.floor(Math.random()*100);
+      document.querySelector(".saldo").innerText = "Rp " + saldo.toLocaleString();
+    }
+
+    // Footer tab aktif
+    function gantiTab(el){
+      document.querySelectorAll("footer div").forEach(d=>d.classList.remove("active"));
+      el.classList.add("active");
+    }
+
+    // Notifikasi random
+    function showNotif(){
+      const notif = document.getElementById("notif");
+      notif.innerText = "Player" + Math.floor(Math.random()*999) + " menang Rp " + (Math.floor(Math.random()*5000)+1000).toLocaleString();
+      notif.classList.add("show");
+      setTimeout(()=>notif.classList.remove("show"),3000);
+    }
+    setInterval(showNotif,8000);
+
+    // Dark mode toggle (tekan huruf D)
+    document.addEventListener("keydown",e=>{
+      if(e.key==="d"||e.key==="D"){document.body.classList.toggle("dark")}
+    });
+  </script>
 </body>
-  </html>
+    </html>
