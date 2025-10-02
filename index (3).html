@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aplikasi Slot Demo</title>
+  <style>
+    * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+    body {background:#f5f5f5; color:#333; padding-bottom:60px;}
+    a {text-decoration:none; color:inherit;}
+
+    /* Topbar saldo */
+    header {
+      background:#27ae60; 
+      padding:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color:#fff;
+    }
+    header .saldo-box {
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    header .saldo {
+      background:#fff; color:#27ae60; padding:5px 12px; border-radius:20px; font-weight:bold;
+    }
+    header button {
+      background:#fff; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;
+      color:#27ae60; font-weight:bold;
+    }
+
+    /* Running text event */
+    .marquee {
+      background:#fff; padding:5px; font-size:14px; color:#e74c3c;
+      overflow:hidden; white-space:nowrap;
+    }
+    .marquee span {
+      display:inline-block; padding-left:100%; animation:marquee 15s linear infinite;
+    }
+    @keyframes marquee {
+      0% {transform:translateX(0);}
+      100% {transform:translateX(-100%);}
+    }
+
+    /* Banner slider */
+    .banner-slider {position:relative; overflow:hidden;}
+    .banner-slider img {width:100%; height:150px; object-fit:cover;}
+    
+    /* Menu kategori */
+    .menu-grid {
+      display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; padding:10px;
+      background:#fff; text-align:center;
+    }
+    .menu-grid div {
+      font-size:13px; color:#333;
+    }
+    .menu-grid img {width:40px; margin-bottom:5px;}
+
+    /* Section title */
+    .section-title {margin:15px 10px; font-weight:bold; font-size:16px;}
+
+    /* Games */
+    .games-grid {
+      display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; padding:10px;
+    }
+    .game {
+      background:#fff; border-radius:10px; overflow:hidden; text-align:center;
+      font-size:14px; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;
+      transition:transform 0.2s;
+    }
+    .game:hover {transform:scale(1.05);}
+    .game img {width:100%; height:90px; object-fit:cover;}
+
+    /* Floating button */
+    .floating {
+      position:fixed; bottom:80px; right:20px;
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .floating button {
+      background:#27ae60; color:#fff; border:none; padding:12px; border-radius:50%; cursor:pointer;
+      box-shadow:0 4px 8px rgba(0,0,0,0.2); font-size:18px;
+    }
+
+    /* Footer nav */
+    footer {
+      background:#fff; padding:10px; display:flex; justify-content:space-around;
+      border-top:1px solid #ddd; position:fixed; bottom:0; width:100%;
+    }
+    footer div {text-align:center; font-size:13px; color:#666;}
+    footer div.active {color:#27ae60; font-weight:bold;}
+  </style>
+</head>
+<body>
+
+  <!-- Topbar saldo -->
+  <header>
+    <div class="saldo-box">
+      <div class="saldo">Rp 26,33</div>
+      <button>Deposit</button>
+      <button>Tarik</button>
+    </div>
+    <div>🔔</div>
+  </header>
+
+  <!-- Running text -->
+  <div class="marquee"><span>🎉 Selamat kepada Budi yang baru saja WD Rp 2.000.000 | 🎁 Bonus new member 100% | 🔥 Event cashback setiap hari!</span></div>
+
+  <!-- Banner promo -->
+  <div class="banner-slider">
+    <img src="https://i.ibb.co/gjS1S0V/banner-slot.jpg" alt="Promo Banner">
+  </div>
+
+  <!-- Menu kategori -->
+  <div class="menu-grid">
+    <div><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Slot</p></div>
+    <div><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Casino</p></div>
+    <div><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Sports</p></div>
+    <div><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Tembak Ikan</p></div>
+  </div>
+
+  <!-- Section terbaru -->
+  <div class="section-title">🔥 Terbaru</div>
+  <div class="games-grid">
+    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Mahjong Wins 3</p></div>
+    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Mega Wheel</p></div>
+    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Treasures of Aztec</p></div>
+  </div>
+
+  <!-- Section hot -->
+  <div class="section-title">🔥 Hot</div>
+  <div class="games-grid">
+    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Mahjong Ways</p></div>
+    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Lucky Neko</p></div>
+    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Starlight Princess</p></div>
+    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Gates of Olympus</p></div>
+    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Wild Bounty</p></div>
+    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Mahjong Ways 2</p></div>
+  </div>
+
+  <!-- Floating button -->
+  <div class="floating">
+    <button>⬇️</button>
+    <button>💬</button>
+  </div>
+
+  <!-- Footer nav -->
+  <footer>
+    <div class="active">🏠 Beranda</div>
+    <div>🤝 Undang</div>
+    <div>🎁 Hadiah</div>
+    <div>🔥 Promosi</div>
+    <div>👤 Akun</div>
+  </footer>
+
+</body>
+  </html>
