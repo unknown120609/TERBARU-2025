@@ -285,8 +285,7 @@
       <button onclick="doWithdraw()">OK</button>
       <button style="background:#e74c3c;margin-top:8px;color:#fff" onclick="closeWithdrawModal()">Batal</button>
     </div>
-  </div>
-
+  </div}
 <script>
 /* ---------- Demo data & utils ---------- */
 const demoGames = [
@@ -362,8 +361,9 @@ function doWithdraw(){
 }
 
 /* ---------- bank link ---------- */
-function showBankModal(){ q('#bankModal').classList.add('show'); q('#bankModal').style.visibility='visible';
-  // fill if exists
+function showBankModal(){ 
+  q('#bankModal').classList.add('show'); 
+  q('#bankModal').style.visibility='visible';
   q('#bankName').value = localStorage.getItem('bankName') || '';
   q('#bankNo').value   = localStorage.getItem('bankNo') || '';
   q('#bankOwner').value= localStorage.getItem('bankOwner') || '';
@@ -383,13 +383,20 @@ function saveBank(){
 }
 
 /* ---------- account sheet ---------- */
-function openSheet(){ q('#accountSheet').classList.add('show'); q('#accountSheet').setAttribute('aria-hidden','false'); renderAccountInfo() }
-function closeSheet(){ q('#accountSheet').classList.remove('show'); q('#accountSheet').setAttribute('aria-hidden','true') }
+function openSheet(){ 
+  q('#accountSheet').classList.add('show'); 
+  q('#accountSheet').setAttribute('aria-hidden','false'); 
+  renderAccountInfo() 
+}
+function closeSheet(){ 
+  q('#accountSheet').classList.remove('show'); 
+  q('#accountSheet').setAttribute('aria-hidden','true') 
+}
 
 function renderAccountInfo(){
-  const name = localStorage.getItem('profileName') || 'HaloPercy241';
-  const id = localStorage.getItem('profileId') || 'User58943761';
-  const phone = localStorage.getItem('profilePhone') || '+62 862596697';
+  const name = localStorage.getItem('profileName') || 'Pengguna Demo';
+  const id = localStorage.getItem('profileId') || 'User' + Math.floor(Math.random()*100000);
+  const phone = localStorage.getItem('profilePhone') || '+62 8xxxxxxx';
   const avatar = localStorage.getItem('profileAvatar') || 'https://i.ibb.co/7k6h8hF/default-avatar.png';
   q('#profileName').innerText = name;
   q('#profileId').innerText = id;
@@ -397,23 +404,19 @@ function renderAccountInfo(){
   q('#avatarImg').src = avatar;
   // bank info
   const bank = localStorage.getItem('bankName'), no = localStorage.getItem('bankNo'), owner = localStorage.getItem('bankOwner');
+  const menuList = q('.menu-list');
+  menuList.querySelectorAll('.bank-info').forEach(e=>e.remove());
   if(bank && no && owner){
-    const info = document.createElement('div');
-    info.className = 'item';
-    info.innerHTML = `<div><strong>Rekening Terkait</strong><div class="small">${bank} - ${no} <br/>a.n. ${owner}</div></div><div>›</div>`;
-    // insert at top of menu-list
-    const menuList = q('.menu-list');
-    // remove existing bank item if any
-    const existing = Array.from(menuList.querySelectorAll('.bank-info'));
-    existing.forEach(e=>e.remove());
-    const el = document.createElement('div'); el.className='bank-info item'; el.innerHTML = `<div><strong>Rekening</strong><div class="small">${bank} - ${no}<br/>a.n. ${owner}</div></div><div>›</div>`;
+    const el = document.createElement('div'); 
+    el.className='bank-info item'; 
+    el.innerHTML = `<div><strong>Rekening</strong><div class="small">${bank} - ${no}<br/>a.n. ${owner}</div></div><div>›</div>`;
     menuList.insertBefore(el, menuList.firstChild);
   }
 }
 
 /* ---------- profile edit ---------- */
 function editProfile(){
-  const newName = prompt('Ubah nama', localStorage.getItem('profileName') || 'HaloPercy241');
+  const newName = prompt('Ubah nama', localStorage.getItem('profileName') || 'Pengguna Demo');
   if(newName) localStorage.setItem('profileName', newName);
   renderAccountInfo();
 }
@@ -423,11 +426,15 @@ function logout(){ if(confirm('Keluar dari demo?')){ localStorage.clear(); locat
 
 /* ---------- game open ---------- */
 function openGame(g){
-  // open link in new tab
   window.open(g.link, '_blank');
 }
 
 /* ---------- init ---------- */
 function init(){
-  // set some default demo values if not set
-  if(!localStorage.getItem('saldo')) lo
+  if(!localStorage.getItem('saldo')) localStorage.setItem('saldo','0');
+  renderStrip();
+  renderGrid();
+  updateBalanceUI();
+}
+init();
+</script>
