@@ -6,149 +6,146 @@
   <title>Aplikasi Slot Demo</title>
   <style>
     * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
-    body {background:#f5f5f5; color:#333;}
+    body {background:#f5f5f5; color:#333; padding-bottom:60px;}
+    a {text-decoration:none; color:inherit;}
 
-    /* Fade-in */
-    header, .banner, .menu, .games-grid, footer {
-      animation: fadeIn 0.8s ease forwards;
-      opacity:0;
-    }
-    header {animation-delay:0.1s;}
-    .banner {animation-delay:0.3s;}
-    .menu {animation-delay:0.5s;}
-    .games-grid {animation-delay:0.7s;}
-    footer {animation-delay:0.9s;}
-    @keyframes fadeIn {
-      to {opacity:1;}
-    }
-
+    /* Topbar saldo */
     header {
-      background:#2ecc71; 
+      background:#27ae60; 
       padding:10px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       color:#fff;
     }
-    header h1 {font-size:20px;}
-    header .saldo {background:#fff; color:#2ecc71; padding:5px 10px; border-radius:20px; font-weight:bold;}
-
-    .banner {
-      background:#27ae60;
-      color:#fff;
-      text-align:center;
-      padding:15px;
-    }
-    .banner img {width:100%; border-radius:8px;}
-
-    .menu {
+    header .saldo-box {
       display:flex;
-      justify-content:space-around;
-      padding:10px;
-      background:#fff;
-    }
-    .menu button {
-      background:#2ecc71;
-      color:#fff;
-      border:none;
-      padding:10px 15px;
-      border-radius:20px;
-      cursor:pointer;
-      font-size:14px;
-      transition:transform 0.2s ease;
-    }
-    .menu button:hover {transform:scale(1.1);}
-
-    .section-title {
-      margin:15px 10px;
-      font-weight:bold;
-      font-size:16px;
-    }
-
-    .games-grid {
-      display:grid;
-      grid-template-columns:repeat(3, 1fr);
+      align-items:center;
       gap:10px;
-      padding:10px;
+    }
+    header .saldo {
+      background:#fff; color:#27ae60; padding:5px 12px; border-radius:20px; font-weight:bold;
+    }
+    header button {
+      background:#fff; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;
+      color:#27ae60; font-weight:bold;
+    }
+
+    /* Running text event */
+    .marquee {
+      background:#fff; padding:5px; font-size:14px; color:#e74c3c;
+      overflow:hidden; white-space:nowrap;
+    }
+    .marquee span {
+      display:inline-block; padding-left:100%; animation:marquee 15s linear infinite;
+    }
+    @keyframes marquee {
+      0% {transform:translateX(0);}
+      100% {transform:translateX(-100%);}
+    }
+
+    /* Banner slider */
+    .banner-slider {position:relative; overflow:hidden;}
+    .banner-slider img {width:100%; height:150px; object-fit:cover;}
+    
+    /* Menu kategori */
+    .menu-grid {
+      display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; padding:10px;
+      background:#fff; text-align:center;
+    }
+    .menu-grid div {
+      font-size:13px; color:#333;
+    }
+    .menu-grid img {width:40px; margin-bottom:5px;}
+
+    /* Section title */
+    .section-title {margin:15px 10px; font-weight:bold; font-size:16px;}
+
+    /* Games */
+    .games-grid {
+      display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; padding:10px;
     }
     .game {
-      background:#fff;
-      border-radius:10px;
-      overflow:hidden;
-      text-align:center;
-      font-size:14px;
-      box-shadow:0 2px 4px rgba(0,0,0,0.1);
-      cursor:pointer;
-      transition:transform 0.2s ease, box-shadow 0.2s ease;
+      background:#fff; border-radius:10px; overflow:hidden; text-align:center;
+      font-size:14px; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;
+      transition:transform 0.2s;
     }
-    .game img {
-      width:100%;
-      height:90px;
-      object-fit:cover;
+    .game:hover {transform:scale(1.05);}
+    .game img {width:100%; height:90px; object-fit:cover;}
+
+    /* Floating button */
+    .floating {
+      position:fixed; bottom:80px; right:20px;
+      display:flex; flex-direction:column; gap:10px;
     }
-    .game:hover {transform:scale(1.05); box-shadow:0 4px 8px rgba(0,0,0,0.15);}
-    .game:active {animation:bounce 0.3s;}
-    @keyframes bounce {
-      0% {transform:scale(1);}
-      50% {transform:scale(0.9);}
-      100% {transform:scale(1);}
+    .floating button {
+      background:#27ae60; color:#fff; border:none; padding:12px; border-radius:50%; cursor:pointer;
+      box-shadow:0 4px 8px rgba(0,0,0,0.2); font-size:18px;
     }
 
+    /* Footer nav */
     footer {
-      background:#fff;
-      padding:10px;
-      display:flex;
-      justify-content:space-around;
-      border-top:1px solid #ddd;
-      position:fixed;
-      bottom:0;
-      width:100%;
+      background:#fff; padding:10px; display:flex; justify-content:space-around;
+      border-top:1px solid #ddd; position:fixed; bottom:0; width:100%;
     }
-    footer div {
-      text-align:center;
-      font-size:13px;
-      color:#666;
-      transition:color 0.2s ease;
-    }
-    footer div.active {color:#2ecc71; font-weight:bold;}
-    footer div:hover {color:#2ecc71;}
+    footer div {text-align:center; font-size:13px; color:#666;}
+    footer div.active {color:#27ae60; font-weight:bold;}
   </style>
 </head>
 <body>
 
+  <!-- Topbar saldo -->
   <header>
-    <h1>RprpRp</h1>
-    <div class="saldo">Rp 26,33</div>
+    <div class="saldo-box">
+      <div class="saldo">Rp 26,33</div>
+      <button>Deposit</button>
+      <button>Tarik</button>
+    </div>
+    <div>🔔</div>
   </header>
 
-  <div class="banner">
+  <!-- Running text -->
+  <div class="marquee"><span>🎉 Selamat kepada Budi yang baru saja WD Rp 2.000.000 | 🎁 Bonus new member 100% | 🔥 Event cashback setiap hari!</span></div>
+
+  <!-- Banner promo -->
+  <div class="banner-slider">
     <img src="https://i.ibb.co/gjS1S0V/banner-slot.jpg" alt="Promo Banner">
-    <p>🎁 Unduh aplikasi & masuk dapat bonus Rp 1.700</p>
   </div>
 
-  <div class="menu">
-    <button>VIP</button>
-    <button>Roulet</button>
-    <button>Undang</button>
+  <!-- Menu kategori -->
+  <div class="menu-grid">
+    <div><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Slot</p></div>
+    <div><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Casino</p></div>
+    <div><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Sports</p></div>
+    <div><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Tembak Ikan</p></div>
   </div>
 
+  <!-- Section terbaru -->
   <div class="section-title">🔥 Terbaru</div>
   <div class="games-grid">
-    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg" alt=""><p>Mahjong Wins 3</p></div>
-    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg" alt=""><p>Mega Wheel</p></div>
-    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg" alt=""><p>Treasures of Aztec</p></div>
+    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Mahjong Wins 3</p></div>
+    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Mega Wheel</p></div>
+    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Treasures of Aztec</p></div>
   </div>
 
+  <!-- Section hot -->
   <div class="section-title">🔥 Hot</div>
   <div class="games-grid">
-    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg" alt=""><p>Mahjong Ways</p></div>
-    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg" alt=""><p>Lucky Neko</p></div>
-    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg" alt=""><p>Starlight Princess</p></div>
-    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg" alt=""><p>Gates of Olympus</p></div>
-    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg" alt=""><p>Wild Bounty</p></div>
-    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg" alt=""><p>Mahjong Ways 2</p></div>
+    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Mahjong Ways</p></div>
+    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Lucky Neko</p></div>
+    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Starlight Princess</p></div>
+    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Gates of Olympus</p></div>
+    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Wild Bounty</p></div>
+    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Mahjong Ways 2</p></div>
   </div>
 
+  <!-- Floating button -->
+  <div class="floating">
+    <button>⬇️</button>
+    <button>💬</button>
+  </div>
+
+  <!-- Footer nav -->
   <footer>
     <div class="active">🏠 Beranda</div>
     <div>🤝 Undang</div>
@@ -158,4 +155,4 @@
   </footer>
 
 </body>
-</html>
+  </html>
