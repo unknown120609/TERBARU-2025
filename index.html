@@ -1,16 +1,229 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Cross Road Game | @coding.stella</title>
-  <link rel="stylesheet" href="./style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RprpRp</title>
+  <style>
+    * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
+    body {background:#f5f5f5; color:#333; padding-bottom:60px;}
 
+    /* LOADING SCREEN */
+    #loading {
+      position:fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background:#2ecc71;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      z-index:2000;
+      color:#fff;
+    }
+    #loading h1 {margin-top:15px; font-size:22px;}
+    .spinner {
+      border:6px solid rgba(255,255,255,0.3);
+      border-top:6px solid #fff;
+      border-radius:50%;
+      width:50px;
+      height:50px;
+      animation:spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% {transform:rotate(0deg);}
+      100% {transform:rotate(360deg);}
+    }
+
+    /* HEADER */
+    header {
+      background:#2ecc71; 
+      padding:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color:#fff;
+      position:sticky;
+      top:0;
+      z-index:1000;
+    }
+    header h1 {font-size:20px; animation:slideDown 0.6s ease;}
+    header .saldo {
+      background:#fff;
+      color:#2ecc71;
+      padding:5px 10px;
+      border-radius:20px;
+      font-weight:bold;
+      animation:pulse 1.5s infinite;
+    }
+
+    /* BANNER */
+    .banner {
+      background:#27ae60;
+      color:#fff;
+      text-align:center;
+      padding:15px;
+    }
+    .banner img {
+      width:100%;
+      border-radius:8px;
+      animation:fadeIn 1s ease;
+    }
+    .banner p {margin-top:8px; font-size:14px;}
+
+    /* MENU */
+    .menu {
+      display:flex;
+      justify-content:space-around;
+      padding:10px;
+      background:#fff;
+    }
+    .menu button {
+      background:#2ecc71;
+      color:#fff;
+      border:none;
+      padding:10px 15px;
+      border-radius:20px;
+      cursor:pointer;
+      font-size:14px;
+      transition:transform 0.2s ease, background 0.3s;
+    }
+    .menu button:hover {
+      background:#27ae60;
+      transform:scale(1.1);
+    }
+    .menu button:active {transform:scale(0.95);}
+
+    /* SECTION */
+    .section-title {
+      margin:15px 10px;
+      font-weight:bold;
+      font-size:16px;
+      animation:slideRight 0.6s ease;
+    }
+
+    /* GAME GRID */
+    .games-grid {
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:10px;
+      padding:10px;
+    }
+    .game {
+      background:#fff;
+      border-radius:10px;
+      overflow:hidden;
+      text-align:center;
+      font-size:14px;
+      box-shadow:0 2px 4px rgba(0,0,0,0.1);
+      cursor:pointer;
+      transition:transform 0.2s ease, box-shadow 0.3s;
+      animation:fadeUp 0.8s ease;
+    }
+    .game img {
+      width:100%;
+      height:90px;
+      object-fit:cover;
+    }
+    .game:hover {
+      transform:translateY(-5px) scale(1.05);
+      box-shadow:0 6px 12px rgba(0,0,0,0.2);
+    }
+    .game:active {transform:scale(0.95);}
+
+    /* FOOTER */
+    footer {
+      background:#fff;
+      padding:10px;
+      display:flex;
+      justify-content:space-around;
+      border-top:1px solid #ddd;
+      position:fixed;
+      bottom:0;
+      width:100%;
+    }
+    footer div {
+      text-align:center;
+      font-size:13px;
+      color:#666;
+      transition:color 0.3s, transform 0.2s;
+    }
+    footer div.active {color:#2ecc71; font-weight:bold;}
+    footer div:hover {color:#27ae60; transform:scale(1.1);}
+
+    /* ANIMASI */
+    @keyframes fadeIn {from{opacity:0;} to{opacity:1;}}
+    @keyframes fadeUp {from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);}}
+    @keyframes slideDown {from{opacity:0; transform:translateY(-20px);} to{opacity:1; transform:translateY(0);}}
+    @keyframes slideRight {from{opacity:0; transform:translateX(-20px);} to{opacity:1; transform:translateX(0);}}
+    @keyframes pulse {
+      0% {transform:scale(1);}
+      50% {transform:scale(1.05);}
+      100% {transform:scale(1);}
+    }
+  </style>
 </head>
 <body>
 
-<div id="root" />
+  <!-- LOADING SCREEN -->
+  <div id="loading">
+    <div class="spinner"></div>
+    <h1>Memuat...</h1>
+  </div>
 
-<script type="module" src="./script.js"></script>
+  <!-- HEADER -->
+  <header>
+    <h1>RprpRp</h1>
+    <div class="saldo">Rp 26,33</div>
+  </header>
 
+  <!-- BANNER -->
+  <div class="banner">
+    <img src="https://i.ibb.co/gjS1S0V/banner-slot.jpg" alt="Promo Banner">
+    <p>🎁 Unduh aplikasi & masuk dapat bonus Rp 1.700</p>
+  </div>
+
+  <!-- MENU -->
+  <div class="menu">
+    <button>VIP</button>
+    <button>Roulet</button>
+    <button>Undang</button>
+  </div>
+
+  <!-- GAME SECTION -->
+  <div class="section-title">🔥 Terbaru</div>
+  <div class="games-grid">
+    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg" alt=""><p>Mahjong Wins 3</p></div>
+    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg" alt=""><p>Mega Wheel</p></div>
+    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg" alt=""><p>Treasures of Aztec</p></div>
+  </div>
+
+  <div class="section-title">🔥 Hot</div>
+  <div class="games-grid">
+    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg" alt=""><p>Mahjong Ways</p></div>
+    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg" alt=""><p>Lucky Neko</p></div>
+    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg" alt=""><p>Starlight Princess</p></div>
+    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg" alt=""><p>Gates of Olympus</p></div>
+    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg" alt=""><p>Wild Bounty</p></div>
+    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg" alt=""><p>Mahjong Ways 2</p></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="active">🏠 Beranda</div>
+    <div>🤝 Undang</div>
+    <div>🎁 Hadiah</div>
+    <div>🔥 Promosi</div>
+    <div>👤 Akun</div>
+  </footer>
+
+  <script>
+    // Hilangkan loading setelah 2 detik
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        document.getElementById("loading").style.display = "none";
+      }, 2000);
+    });
+  </script>
 </body>
-</html>
+  </html>
