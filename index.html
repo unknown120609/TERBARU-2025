@@ -2,157 +2,231 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aplikasi Slot Demo</title>
+  <title>Slot Demo</title>
   <style>
-    * {margin:0; padding:0; box-sizing:border-box; font-family:Arial, sans-serif;}
-    body {background:#f5f5f5; color:#333; padding-bottom:60px;}
-    a {text-decoration:none; color:inherit;}
-
-    /* Topbar saldo */
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      margin: 50px auto;
+      width: 320px;
+      background: #222;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    input, button {
+      display: block;
+      width: 90%;
+      margin: 8px auto;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      background: green;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover { background: limegreen; }
     header {
-      background:#27ae60; 
-      padding:10px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      color:#fff;
+      background: #222;
+      padding: 15px;
+      margin-bottom: 20px;
     }
-    header .saldo-box {
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-    header .saldo {
-      background:#fff; color:#27ae60; padding:5px 12px; border-radius:20px; font-weight:bold;
-    }
-    header button {
-      background:#fff; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;
-      color:#27ae60; font-weight:bold;
-    }
-
-    /* Running text event */
-    .marquee {
-      background:#fff; padding:5px; font-size:14px; color:#e74c3c;
-      overflow:hidden; white-space:nowrap;
-    }
-    .marquee span {
-      display:inline-block; padding-left:100%; animation:marquee 15s linear infinite;
-    }
-    @keyframes marquee {
-      0% {transform:translateX(0);}
-      100% {transform:translateX(-100%);}
-    }
-
-    /* Banner slider */
-    .banner-slider {position:relative; overflow:hidden;}
-    .banner-slider img {width:100%; height:150px; object-fit:cover;}
-    
-    /* Menu kategori */
-    .menu-grid {
-      display:grid; grid-template-columns:repeat(4, 1fr); gap:10px; padding:10px;
-      background:#fff; text-align:center;
-    }
-    .menu-grid div {
-      font-size:13px; color:#333;
-    }
-    .menu-grid img {width:40px; margin-bottom:5px;}
-
-    /* Section title */
-    .section-title {margin:15px 10px; font-weight:bold; font-size:16px;}
-
-    /* Games */
-    .games-grid {
-      display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; padding:10px;
+    .games {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 20px;
     }
     .game {
-      background:#fff; border-radius:10px; overflow:hidden; text-align:center;
-      font-size:14px; box-shadow:0 2px 5px rgba(0,0,0,0.1); cursor:pointer;
-      transition:transform 0.2s;
+      width: 120px;
+      background: #222;
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
     }
-    .game:hover {transform:scale(1.05);}
-    .game img {width:100%; height:90px; object-fit:cover;}
-
-    /* Floating button */
-    .floating {
-      position:fixed; bottom:80px; right:20px;
-      display:flex; flex-direction:column; gap:10px;
+    .game img {
+      width: 100%;
+      border-radius: 6px;
     }
-    .floating button {
-      background:#27ae60; color:#fff; border:none; padding:12px; border-radius:50%; cursor:pointer;
-      box-shadow:0 4px 8px rgba(0,0,0,0.2); font-size:18px;
+    .modal {
+      display: none;
+      position: fixed;
+      top:0; left:0;
+      width:100%; height:100%;
+      background: rgba(0,0,0,0.7);
     }
-
-    /* Footer nav */
-    footer {
-      background:#fff; padding:10px; display:flex; justify-content:space-around;
-      border-top:1px solid #ddd; position:fixed; bottom:0; width:100%;
+    .modal-content {
+      background: #fff;
+      color: #000;
+      padding: 20px;
+      width: 250px;
+      margin: 100px auto;
+      border-radius: 10px;
     }
-    footer div {text-align:center; font-size:13px; color:#666;}
-    footer div.active {color:#27ae60; font-weight:bold;}
   </style>
 </head>
 <body>
 
-  <!-- Topbar saldo -->
+<!-- Halaman Login / Register -->
+<div id="loginPage" class="container">
+  <h2>🎰 Login</h2>
+  <input type="text" id="username" placeholder="Username">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+
+  <h3>Belum punya akun?</h3>
+  <input type="text" id="regUser" placeholder="Buat Username">
+  <input type="password" id="regPass" placeholder="Buat Password">
+  <button onclick="register()">Register</button>
+</div>
+
+<!-- Halaman Dashboard -->
+<div id="homePage" style="display:none;">
   <header>
-    <div class="saldo-box">
-      <div class="saldo">Rp 26,33</div>
-      <button>Deposit</button>
-      <button>Tarik</button>
-    </div>
-    <div>🔔</div>
+    <h2>Halo, <span id="userName"></span></h2>
+    <p>Saldo: Rp <span id="saldo">0</span></p>
+    <button onclick="showDeposit()">💰 Deposit</button>
+    <button onclick="showWithdraw()">🏦 Withdraw</button>
+    <button onclick="logout()">🚪 Logout</button>
   </header>
 
-  <!-- Running text -->
-  <div class="marquee"><span>🎉 Selamat kepada Budi yang baru saja WD Rp 2.000.000 | 🎁 Bonus new member 100% | 🔥 Event cashback setiap hari!</span></div>
+  <main>
+    <h3>Game Populer</h3>
+    <div class="games">
+      <div class="game" onclick="openGame('Mahjong Ways','https://linkpribadi.com/mahjong')">
+        <img src="https://i.ibb.co/5GJdrdZ/mahjong.jpg" alt="Mahjong">
+        <p>Mahjong Ways</p>
+      </div>
+      <div class="game" onclick="openGame('Starlight Princess','https://linkpribadi.com/starlight')">
+        <img src="https://i.ibb.co/5R2vvGn/starlight.jpg" alt="Starlight">
+        <p>Starlight Princess</p>
+      </div>
+      <div class="game" onclick="openGame('Gates of Olympus','https://linkpribadi.com/olympus')">
+        <img src="https://i.ibb.co/ZmQ0wWp/olympus.jpg" alt="Olympus">
+        <p>Gates of Olympus</p>
+      </div>
+    </div>
+  </main>
+</div>
 
-  <!-- Banner promo -->
-  <div class="banner-slider">
-    <img src="https://i.ibb.co/gjS1S0V/banner-slot.jpg" alt="Promo Banner">
+<!-- Deposit Modal -->
+<div class="modal" id="depositModal">
+  <div class="modal-content">
+    <h3>Deposit</h3>
+    <input type="number" id="depositAmount" placeholder="Masukkan jumlah">
+    <button onclick="deposit()">OK</button>
+    <button onclick="closeModal('depositModal')">Batal</button>
   </div>
+</div>
 
-  <!-- Menu kategori -->
-  <div class="menu-grid">
-    <div><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Slot</p></div>
-    <div><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Casino</p></div>
-    <div><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Sports</p></div>
-    <div><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Tembak Ikan</p></div>
+<!-- Withdraw Modal -->
+<div class="modal" id="withdrawModal">
+  <div class="modal-content">
+    <h3>Withdraw</h3>
+    <input type="number" id="withdrawAmount" placeholder="Masukkan jumlah">
+    <button onclick="withdraw()">OK</button>
+    <button onclick="closeModal('withdrawModal')">Batal</button>
   </div>
+</div>
 
-  <!-- Section terbaru -->
-  <div class="section-title">🔥 Terbaru</div>
-  <div class="games-grid">
-    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Mahjong Wins 3</p></div>
-    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Mega Wheel</p></div>
-    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Treasures of Aztec</p></div>
-  </div>
+<script>
+  // Register
+  function register() {
+    let user = document.getElementById('regUser').value;
+    let pass = document.getElementById('regPass').value;
+    if (user && pass) {
+      localStorage.setItem("user", user);
+      localStorage.setItem("pass", pass);
+      localStorage.setItem("saldo", 0);
+      alert("Registrasi berhasil, silakan login!");
+    } else {
+      alert("Isi semua data!");
+    }
+  }
 
-  <!-- Section hot -->
-  <div class="section-title">🔥 Hot</div>
-  <div class="games-grid">
-    <div class="game"><img src="slot.jpg"><p>Mahjong Ways</p></div>
-    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Lucky Neko</p></div>
-    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Starlight Princess</p></div>
-    <div class="game"><img src="https://i.ibb.co/0M8zfw7/mega-wheel.jpg"><p>Gates of Olympus</p></div>
-    <div class="game"><img src="https://i.ibb.co/k8g5ZTb/aztec.jpg"><p>Wild Bounty</p></div>
-    <div class="game"><img src="https://i.ibb.co/0rVddmy/mahjong.jpg"><p>Mahjong Ways 2</p></div>
-  </div>
+  // Login
+  function login() {
+    let user = document.getElementById('username').value;
+    let pass = document.getElementById('password').value;
+    if (user === localStorage.getItem("user") && pass === localStorage.getItem("pass")) {
+      localStorage.setItem("loggedIn", "true");
+      showHome();
+    } else {
+      alert("Login gagal!");
+    }
+  }
 
-  <!-- Floating button -->
-  <div class="floating">
-    <button>⬇️</button>
-    <button>💬</button>
-  </div>
+  // Logout
+  function logout() {
+    localStorage.setItem("loggedIn", "false");
+    document.getElementById("homePage").style.display = "none";
+    document.getElementById("loginPage").style.display = "block";
+  }
 
-  <!-- Footer nav -->
-  <footer>
-    <div class="active">🏠 Beranda</div>
-    <div>🤝 Undang</div>
-    <div>🎁 Hadiah</div>
-    <div>🔥 Promosi</div>
-    <div>👤 Akun</div>
-  </footer>
+  // Tampilkan dashboard
+  function showHome() {
+    document.getElementById("loginPage").style.display = "none";
+    document.getElementById("homePage").style.display = "block";
+    document.getElementById("userName").innerText = localStorage.getItem("user");
+    document.getElementById("saldo").innerText = localStorage.getItem("saldo");
+  }
 
+  // Deposit
+  function showDeposit() {
+    document.getElementById("depositModal").style.display = "block";
+  }
+  function deposit() {
+    let jumlah = parseInt(document.getElementById("depositAmount").value);
+    if (jumlah > 0) {
+      let saldo = parseInt(localStorage.getItem("saldo"));
+      saldo += jumlah;
+      localStorage.setItem("saldo", saldo);
+      document.getElementById("saldo").innerText = saldo;
+      closeModal('depositModal');
+    }
+  }
+
+  // Withdraw
+  function showWithdraw() {
+    document.getElementById("withdrawModal").style.display = "block";
+  }
+  function withdraw() {
+    let jumlah = parseInt(document.getElementById("withdrawAmount").value);
+    let saldo = parseInt(localStorage.getItem("saldo"));
+    if (jumlah > 0 && jumlah <= saldo) {
+      saldo -= jumlah;
+      localStorage.setItem("saldo", saldo);
+      document.getElementById("saldo").innerText = saldo;
+      closeModal('withdrawModal');
+    } else {
+      alert("Saldo tidak cukup!");
+    }
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).style.display = "none";
+  }
+
+  // Open Game
+  function openGame(title, link) {
+    alert("Membuka game: " + title);
+    window.open(link, "_blank");
+  }
+
+  // Auto tampilkan dashboard kalau sudah login
+  window.onload = function() {
+    if (localStorage.getItem("loggedIn") === "true") {
+      showHome();
+    }
+  }
+</script>
 </body>
-  </html>
+</html>
